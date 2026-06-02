@@ -3,323 +3,170 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>StudyNext Teacher Portal</title>
+<title>StudyNext Teacher</title>
 <style>
-:root{--bg:#f7f9fc;--ink:#172033;--muted:#66758d;--panel:#fff;--panel2:#edf4ff;--line:#dbe5f3;--accent:#1769ff;--accent2:#00a7c8;--ok:#0f9f6e;--warn:#d98900;--bad:#d9365f;--shadow:0 18px 60px rgba(33,62,105,.14);--radius:8px}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI","Noto Sans JP",sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}.bg{position:fixed;inset:0;z-index:-1;background:linear-gradient(140deg,#fff,#edf5ff 55%,#f8fbff)}.bg:after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(23,105,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(23,105,255,.07) 1px,transparent 1px);background-size:38px 38px;mask-image:linear-gradient(to bottom,black,transparent 75%)}
-.auth{min-height:100vh;display:grid;place-items:center;padding:18px}.authCard{width:min(460px,100%);background:white;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:var(--radius);padding:22px}.brand{display:flex;align-items:center;gap:12px;font-weight:950;font-size:1.2rem;margin-bottom:18px}.mark{width:42px;height:42px;border-radius:8px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:6px;background:var(--panel2);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:14px}.tabs button{border:0;border-radius:6px;background:transparent;color:var(--muted);font-weight:900;padding:11px}.tabs button.active{background:white;color:var(--accent);box-shadow:0 8px 22px rgba(23,105,255,.12)}.form{display:grid;gap:12px}.field{display:grid;gap:6px;color:var(--muted);font-weight:850;font-size:.86rem}.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:var(--radius);background:white;color:var(--ink);outline:none;padding:12px}.field textarea{min-height:92px;resize:vertical}.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(23,105,255,.1)}.primary,.secondary,.danger,.small{border-radius:var(--radius);border:1px solid var(--line);font-weight:950}.primary{border-color:transparent;background:linear-gradient(135deg,var(--accent),#00b6d6);color:white;padding:12px}.secondary{background:white;color:var(--ink);padding:11px}.danger{background:#fff2f5;color:var(--bad);padding:11px}.msg{min-height:1.4em;text-align:center;font-weight:900;color:var(--bad)}.msg.ok{color:var(--ok)}.hint{font-size:.82rem;color:var(--muted);line-height:1.55}.hide{display:none!important}
-.portal{display:none;min-height:100vh}.shell{display:grid;grid-template-columns:250px 1fr;min-height:100vh}.side{border-right:1px solid var(--line);background:rgba(255,255,255,.9);padding:18px;position:sticky;top:0;height:100vh}.nav{display:grid;gap:8px}.nav button{border:0;border-radius:var(--radius);background:transparent;text-align:left;color:var(--muted);font-weight:950;padding:12px}.nav button.active{background:var(--panel2);color:var(--accent)}.sideBottom{position:absolute;left:18px;right:18px;bottom:18px;border:1px solid var(--line);border-radius:var(--radius);background:white;padding:12px;color:var(--muted);font-size:.84rem}.main{padding:24px;width:min(1220px,100%)}.top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px}.top h1{margin:0;font-size:2rem}.top p{margin:7px 0 0;color:var(--muted)}.classLine{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px}.pill{border:1px solid var(--line);background:white;color:var(--accent);border-radius:999px;font-weight:950;font-size:.8rem;padding:7px 10px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}.card{border:1px solid var(--line);border-radius:var(--radius);background:white;box-shadow:0 10px 32px rgba(33,62,105,.08);padding:16px}.metric b{display:block;font-size:2rem;color:var(--accent)}.metric span{color:var(--muted)}.chart{display:grid;gap:10px}.barRow{display:grid;grid-template-columns:130px 1fr 70px;gap:10px;align-items:center}.barTrack{height:18px;background:var(--panel2);border-radius:999px;overflow:hidden}.barFill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:999px}.table{width:100%;border-collapse:collapse}.table th,.table td{padding:10px;border-bottom:1px solid var(--line);text-align:left;font-size:.9rem}.table th{color:var(--muted);font-size:.78rem}.list{display:grid;gap:12px}.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}.codeBox{font-size:2.2rem;font-weight:1000;letter-spacing:.08em;color:var(--accent);padding:14px;border:1px dashed var(--accent);border-radius:var(--radius);text-align:center;background:#f8fbff}.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#172033;color:white;border-radius:var(--radius);padding:12px 16px;font-weight:900;box-shadow:var(--shadow);display:none;z-index:30}.toast.show{display:block}@media(max-width:900px){.shell{grid-template-columns:1fr}.side{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line)}.sideBottom{position:static;margin-top:14px}.main{padding:14px}.two{grid-template-columns:1fr}.top{flex-direction:column}.barRow{grid-template-columns:1fr}}
+:root{--bg:#f6f9ff;--panel:#fff;--panel2:#eef5ff;--line:#d9e5f6;--ink:#142033;--muted:#65758d;--brand:#1769ff;--brand2:#00a7c8;--good:#0f9f6e;--bad:#d9365f;--warn:#f59e0b;--shadow:0 18px 54px rgba(38,74,130,.16);--radius:22px;--font:ui-sans-serif,system-ui,-apple-system,"Segoe UI","Noto Sans JP",sans-serif}
+body.theme-night{--bg:#07111f;--panel:#0d1b2f;--panel2:#102844;--line:#224466;--ink:#f7fbff;--muted:#a8bad0;--brand:#66d9ff;--brand2:#7c7cff;--shadow:0 22px 70px rgba(0,0,0,.45)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:var(--font)}button,input,textarea,select{font:inherit}button{cursor:pointer}
+.grid-bg{position:fixed;inset:0;pointer-events:none;opacity:.45;background:radial-gradient(circle at 18% 10%,rgba(23,105,255,.18),transparent 28%),radial-gradient(circle at 88% 8%,rgba(0,167,200,.16),transparent 26%),linear-gradient(transparent 39px,rgba(23,105,255,.06) 40px),linear-gradient(90deg,transparent 39px,rgba(23,105,255,.06) 40px);background-size:auto,auto,40px 40px,40px 40px}
+.wrap{position:relative;width:min(1220px,100%);margin:0 auto;padding:24px}.auth-shell{min-height:100vh;display:grid;grid-template-columns:1fr .9fr;gap:22px;align-items:center}.hero,.card,.panel,.side{background:color-mix(in srgb,var(--panel),transparent 4%);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:var(--radius)}.hero,.card,.panel{padding:22px}.brand{display:flex;align-items:center;gap:10px;font-weight:950;color:var(--brand)}.mark{display:grid;place-items:center;width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:white}.hero h1{font-size:clamp(2.1rem,5vw,4.4rem);line-height:1.03;margin:22px 0 14px;letter-spacing:-.06em}.lead,.hint{color:var(--muted);line-height:1.75}.tabs,.row,.nav,.actions{display:flex;gap:8px;flex-wrap:wrap}.tabs button,.nav button,.primary,.secondary,.ghost{border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:var(--panel2);color:var(--ink);font-weight:850}.tabs button.active,.nav button.active,.primary{background:linear-gradient(135deg,var(--brand),var(--brand2));border-color:transparent;color:white}.ghost{background:transparent}form{display:grid;gap:12px;margin-top:14px}label{display:grid;gap:6px;font-weight:800}input,textarea,select{width:100%;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:16px;padding:13px 14px;outline:none}textarea{resize:vertical}input:focus,textarea:focus,select:focus{border-color:var(--brand);box-shadow:0 0 0 4px color-mix(in srgb,var(--brand),transparent 84%)}.portal{display:none;min-height:100vh}.topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:16px}.layout{display:grid;grid-template-columns:238px 1fr;gap:16px}.side{position:sticky;top:18px;align-self:start;padding:12px}.nav{flex-direction:column}.nav button{text-align:left}.panel{margin-bottom:16px}.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.section-title h2{margin:0;font-size:1.35rem}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.stat{padding:16px;border-radius:20px;border:1px solid var(--line);background:var(--panel2)}.stat b{display:block;font-size:1.75rem;color:var(--brand)}.list{display:grid;gap:12px}.item{border:1px solid var(--line);border-radius:20px;background:var(--panel);padding:15px}.item h3{margin:0 0 8px}.item p{margin:0;color:var(--muted);white-space:pre-wrap;line-height:1.65}.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;background:var(--panel2);color:var(--brand);font-size:.78rem;font-weight:900}.chart{display:grid;gap:8px}.bar{display:grid;grid-template-columns:90px 1fr 56px;gap:10px;align-items:center}.bar-line{height:12px;border-radius:999px;background:var(--panel2);overflow:hidden}.bar-line span{display:block;height:100%;background:linear-gradient(90deg,var(--brand),var(--brand2));border-radius:999px}.empty{padding:24px;border:1px dashed var(--line);border-radius:18px;color:var(--muted);text-align:center}.status-ok{color:var(--good)}.status-bad{color:var(--bad)}
+@media(max-width:900px){.auth-shell,.layout,.two,.three{grid-template-columns:1fr}.side{position:static}.nav{flex-direction:row}.nav button{width:auto}}@media(max-width:560px){.wrap{padding:14px}.hero,.card,.panel{border-radius:18px;padding:16px}.topbar{align-items:flex-start;flex-direction:column}}
 </style>
 </head>
 <body>
-<div class="bg"></div>
-<main id="authView" class="auth">
-  <section class="authCard">
-    <div class="brand"><div class="mark">SN</div><div>Teacher Portal</div></div>
-    <div class="tabs"><button id="loginTab" class="active" type="button">ログイン</button><button id="registerTab" type="button">新規登録</button></div>
-    <form id="authForm" class="form">
-      <label class="field">メールアドレス<input id="email" type="email" autocomplete="email" placeholder="teacher@example.com"></label>
-      <label class="field">パスワード<input id="password" type="password" autocomplete="current-password" placeholder="8文字以上"></label>
-      <label id="nameField" class="field hide">先生ニックネーム<input id="teacherName" autocomplete="name" placeholder="〇〇先生"></label>
-      <button id="submitBtn" class="primary" type="submit">ログイン</button>
-      <button id="googleBtn" class="secondary" type="button">Googleアカウントで続ける</button>
-      <p class="hint">初回ログイン後、クラス名を入れると招待コードを自動生成できます。</p>
-    </form>
-    <div id="authMessage" class="msg"></div>
+<div class="grid-bg"></div>
+<main class="wrap">
+  <section id="authView" class="auth-shell">
+    <div class="hero">
+      <div class="brand"><span class="mark">SN</span>StudyNext Teacher</div>
+      <h1>クラスと学習を<br>まとめて見る。</h1>
+      <p class="lead">招待コード、児童連絡、アンケート、デジタルプリント、アプリ追加、学習ログをひとつに集約します。保存先はGitHub private DB、入口はGoogle Sitesで使えます。</p>
+      <p class="hint">Firebaseなし / クレカなし / このPCのStudyNext APIで外部ログイン</p>
+    </div>
+    <div class="card">
+      <div class="tabs"><button id="loginTab" class="active" type="button">ログイン</button><button id="registerTab" type="button">新規登録</button></div>
+      <form id="authForm">
+        <label id="teacherNameWrap">先生名<input id="teacherNameInput" placeholder="例：山田先生"></label>
+        <label>メールアドレス<input id="emailInput" type="email" required autocomplete="email"></label>
+        <label>パスワード<input id="passwordInput" type="password" required minlength="8" autocomplete="current-password"></label>
+        <button id="authSubmit" class="primary" type="submit">ログインする</button>
+        <p id="authStatus" class="hint"></p>
+      </form>
+    </div>
+  </section>
+
+  <section id="portalView" class="portal">
+    <div class="topbar">
+      <div><div class="brand"><span class="mark">SN</span>StudyNext Teacher</div><div id="meSub" class="hint">読み込み中...</div></div>
+      <div class="actions"><button id="refreshBtn" class="secondary" type="button">更新</button><button id="logoutBtn" class="ghost" type="button">ログアウト</button></div>
+    </div>
+    <div class="layout">
+      <aside class="side nav">
+        <button id="dashboardTab" class="active" type="button">📊 ダッシュボード</button>
+        <button id="messagesTab" type="button">💬 連絡・アンケート</button>
+        <button id="printsTab" type="button">📝 プリント</button>
+        <button id="appsTab" type="button">📚 アプリ登録</button>
+        <button id="settingsTab" type="button">⚙ 設定</button>
+      </aside>
+      <section>
+        <div id="dashboardPanel" class="panel">
+          <div class="section-title"><h2>クラス状況</h2><span id="apiStatus" class="badge">API確認中</span></div>
+          <div class="three">
+            <div class="stat"><span>児童数</span><b id="studentCount">0</b></div>
+            <div class="stat"><span>総学習時間</span><b id="totalMinutes">0分</b></div>
+            <div class="stat"><span>ログ数</span><b id="logCount">0</b></div>
+          </div>
+          <form id="classForm">
+            <div class="two"><label>クラス名<input id="classNameInput" placeholder="例：6年1組"></label><label>先生表示名<input id="classTeacherInput" placeholder="例：山田先生"></label></div>
+            <button class="primary" type="submit">クラスを作成して招待コードを発行</button>
+          </form>
+          <div class="two" style="margin-top:14px">
+            <div><h3>招待コード</h3><div id="classList" class="list"></div></div>
+            <div><h3>日別グラフ</h3><div id="chart" class="chart"></div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="section-title"><h2>児童一覧・最近の利用</h2><span class="badge">本名表示</span></div>
+          <div id="studentList" class="list"></div>
+        </div>
+        <div class="panel">
+          <div class="section-title"><h2>最新ログ</h2><span class="badge">どのアプリ / 何分 / 何時</span></div>
+          <div id="logList" class="list"></div>
+        </div>
+
+        <div id="messagesPanel" class="panel" style="display:none">
+          <div class="section-title"><h2>連絡・アンケート送信</h2><span class="badge">児童ポータルへ配信</span></div>
+          <form id="messageForm">
+            <label>対象クラス<select id="messageClass"></select></label>
+            <label>タイトル<input id="messageTitle" placeholder="例：明日の持ち物"></label>
+            <label>本文<textarea id="messageBody" rows="4"></textarea></label>
+            <label><span><input id="allowReply" type="checkbox" style="width:auto"> 児童の返信を許可する</span></label>
+            <label><span><input id="enableSurvey" type="checkbox" style="width:auto"> アンケートを付ける</span></label>
+            <label>アンケート質問（1行1問）<textarea id="surveyQuestions" rows="4" placeholder="今日の授業でわかったことは？&#10;困っていることは？"></textarea></label>
+            <button class="primary" type="submit">送信する</button>
+          </form>
+          <h3>返信・回答</h3><div id="replyList" class="list"></div>
+        </div>
+
+        <div id="printsPanel" class="panel" style="display:none">
+          <div class="section-title"><h2>デジタルプリント</h2><span class="badge">先生が課題を出す形式</span></div>
+          <form id="printForm">
+            <label>対象クラス<select id="printClass"></select></label>
+            <label>タイトル<input id="printTitle" placeholder="例：今日のふり返り"></label>
+            <label>説明<textarea id="printBody" rows="3"></textarea></label>
+            <label>問題（1行1問）<textarea id="printQuestions" rows="6" placeholder="1. 今日のポイントを書こう&#10;2. 自分で例を作ろう"></textarea></label>
+            <button class="primary" type="submit">プリントを配信</button>
+          </form>
+          <h3>提出状況</h3><div id="submissionList" class="list"></div>
+        </div>
+
+        <div id="appsPanel" class="panel" style="display:none">
+          <div class="section-title"><h2>アプリ一覧登録</h2><span class="badge">クラス専用リンク追加</span></div>
+          <form id="appForm">
+            <label>対象クラス<select id="appClass"></select></label>
+            <div class="two"><label>アプリ名<input id="appTitle" placeholder="例：理科動画リンク"></label><label>アイコン<input id="appIcon" placeholder="🔗"></label></div>
+            <label>URL<input id="appUrl" placeholder="https://..."></label>
+            <label>説明<textarea id="appDescription" rows="3"></textarea></label>
+            <button class="primary" type="submit">児童ポータルに追加</button>
+          </form>
+          <h3>追加済み</h3><div id="appList" class="list"></div>
+        </div>
+
+        <div id="settingsPanel" class="panel" style="display:none">
+          <div class="section-title"><h2>設定・貼り付け</h2><span class="badge">Google Sites用</span></div>
+          <div class="two">
+            <button id="copyStudentUrlBtn" class="secondary" type="button">児童URLをコピー</button>
+            <button id="copyTeacherUrlBtn" class="secondary" type="button">先生URLをコピー</button>
+          </div>
+          <div class="two" style="margin-top:12px">
+            <button id="copyStudentIframeBtn" class="secondary" type="button">児童iframeをコピー</button>
+            <button id="copyTeacherIframeBtn" class="secondary" type="button">先生iframeをコピー</button>
+          </div>
+          <form id="themeForm"><label>テーマ<select id="themeSelect"><option value="light">ライト</option><option value="night">ナイト</option></select></label><button class="primary" type="submit">保存</button></form>
+        </div>
+      </section>
+    </div>
   </section>
 </main>
-<main id="portalView" class="portal">
-  <div class="shell">
-    <aside class="side">
-      <div class="brand"><div class="mark">SN</div><div>Teacher</div></div>
-      <nav class="nav">
-        <button id="dashboardTab" class="active" type="button">ダッシュボード</button>
-        <button id="messagesTab" type="button">連絡・アンケート</button>
-        <button id="printsTab" type="button">デジタルプリント</button>
-        <button id="appsTab" type="button">アプリ一覧登録</button>
-      </nav>
-      <div class="sideBottom"><b id="teacherLabel">先生</b><br><span id="classLabel">クラス未選択</span><br><button id="logoutBtn" class="danger" style="width:100%;margin-top:10px" type="button">ログアウト</button></div>
-    </aside>
-    <section class="main">
-      <div class="top"><div><h1 id="pageTitle">ダッシュボード</h1><p id="pageLead">児童の学習時間とアプリ利用を確認します。</p></div></div>
-      <div class="classLine">
-        <select id="classSelect"></select>
-        <button id="newClassBtn" class="secondary" type="button">招待コードを作る</button>
-        <span id="activeCode" class="pill">招待コードなし</span>
-      </div>
-      <section id="dashboardPanel">
-        <div class="grid">
-          <div class="card metric"><b id="studentCount">0</b><span>登録児童</span></div>
-          <div class="card metric"><b id="totalMinutes">0</b><span>合計学習分</span></div>
-          <div class="card metric"><b id="todayMinutes">0</b><span>今日の学習分</span></div>
-        </div>
-        <div class="two" style="margin-top:14px">
-          <div class="card"><h3>児童別 学習時間</h3><div id="studentChart" class="chart"></div></div>
-          <div class="card"><h3>最近の利用ログ</h3><table class="table"><thead><tr><th>児童</th><th>アプリ</th><th>日時</th><th>時間</th></tr></thead><tbody id="logRows"></tbody></table></div>
-        </div>
-        <div class="card" style="margin-top:14px"><h3>児童一覧</h3><table class="table"><thead><tr><th>本名</th><th>生徒ID</th><th>参加日</th></tr></thead><tbody id="studentRows"></tbody></table></div>
-      </section>
-      <section id="messagesPanel" class="hide">
-        <div class="two">
-          <form id="messageForm" class="card form">
-            <h3 style="margin:0">連絡を送る</h3>
-            <label class="field">タイトル<input id="messageTitle" placeholder="明日の持ち物"></label>
-            <label class="field">本文<textarea id="messageBody" placeholder="児童portalに表示する内容"></textarea></label>
-            <label class="field"><span><input id="allowReply" type="checkbox"> 返信を許可する</span></label>
-            <label class="field"><span><input id="withSurvey" type="checkbox"> アンケートを付ける</span></label>
-            <label id="surveyField" class="field hide">質問（1行1問。選択式は「質問 | A,B,C」）<textarea id="surveyLines" placeholder="今日の感想&#10;宿題は終わりましたか | はい,いいえ"></textarea></label>
-            <button class="primary" type="submit">送信</button>
-          </form>
-          <div class="card"><h3>返信・アンケート回答</h3><div id="responsesList" class="list"></div></div>
-        </div>
-        <div class="card" style="margin-top:14px"><h3>送信済み連絡</h3><div id="sentMessages" class="list"></div></div>
-      </section>
-      <section id="printsPanel" class="hide">
-        <div class="two">
-          <form id="printForm" class="card form">
-            <h3 style="margin:0">デジタルプリントを配る</h3>
-            <label class="field">タイトル<input id="printTitle" placeholder="算数プリント 速さ"></label>
-            <label class="field">説明<textarea id="printBody" placeholder="今日の授業で使うプリントです。"></textarea></label>
-            <label class="field">問題（1行1問）<textarea id="printQuestions" placeholder="時速60kmで2時間進むと何kmですか。&#10;式も書きましょう。"></textarea></label>
-            <button class="primary" type="submit">配信する</button>
-          </form>
-          <div class="card"><h3>提出状況</h3><div id="printSubmissions" class="list"></div></div>
-        </div>
-        <div class="card" style="margin-top:14px"><h3>配信済みプリント</h3><div id="printAssignments" class="list"></div></div>
-      </section>
-      <section id="appsPanel" class="hide">
-        <div class="two">
-          <form id="appForm" class="card form">
-            <h3 style="margin:0">アプリを追加</h3>
-            <label class="field">アプリ名<input id="appTitle" placeholder="漢字練習"></label>
-            <label class="field">URL<input id="appUrl" placeholder="https://example.com"></label>
-            <label class="field">説明<textarea id="appDescription" placeholder="児童portalのアプリ一覧に表示します"></textarea></label>
-            <label class="field">アイコン<input id="appIcon" placeholder="📘"></label>
-            <button class="primary" type="submit">登録</button>
-          </form>
-          <div class="card"><h3>登録済みアプリ</h3><div id="appsList" class="list"></div></div>
-        </div>
-      </section>
-    </section>
-  </div>
-</main>
-<div id="classModal" class="auth hide" style="position:fixed;inset:0;background:rgba(10,20,35,.42);z-index:20">
-  <form id="classForm" class="authCard form">
-    <h2 style="margin:0">招待コード作成</h2>
-    <label class="field">先生ニックネーム<input id="classTeacherName" placeholder="〇〇先生"></label>
-    <label class="field">クラス名<input id="className" placeholder="6年1組"></label>
-    <button class="primary" type="submit">生成する</button>
-    <button id="cancelClass" class="secondary" type="button">閉じる</button>
-  </form>
-</div>
-<div id="toast" class="toast"></div>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
-import { getFirestore, collection, doc, getDoc, setDoc, addDoc, getDocs, onSnapshot, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
-
-const firebaseConfig={apiKey:"AIzaSyCj_N-tjM2neCfiNyQljKcPsg-JOKggBt8",authDomain:"studynext-14fab.firebaseapp.com",projectId:"studynext-14fab",storageBucket:"studynext-14fab.firebasestorage.app",messagingSenderId:"518208905501",appId:"1:518208905501:web:0f0be33ae5009a11ab81f4",measurementId:"G-9ES3W12YL5"};
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-const db=getFirestore(app);
-let mode="login";
-let profile=null;
-let classes=[];
-let activeClass=null;
-let students=[];
-let logs=[];
-let unsubscribers=[];
+<div id="toast" style="position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#111827;color:white;border-radius:999px;padding:12px 18px;box-shadow:0 14px 40px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:.2s;z-index:80"></div>
+<script>
+const API_BASE='https://2a0bc38fede535.lhr.life';
+const STUDENT_URL='https://kougame55.github.io/studynext-gitonly-hub/';
+const TEACHER_URL='https://kougame55.github.io/studynext-gitonly-hub/teacher.html';
+const TOKEN_KEY='studynext_teacher_token_v3';
+const PROFILE_KEY='studynext_teacher_profile_v3';
+let mode='login',profile=null,data={};
 const $=id=>document.getElementById(id);
-
-function setMessage(text,ok=false){$("authMessage").textContent=text;$("authMessage").className=ok?"msg ok":"msg"}
-function toast(text){const el=$("toast");el.textContent=text;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),2600)}
-function randomPart(len){const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let out="";for(let i=0;i<len;i++)out+=chars[Math.floor(Math.random()*chars.length)];return out}
-function setMode(next){mode=next;$("loginTab").classList.toggle("active",next==="login");$("registerTab").classList.toggle("active",next==="register");$("submitBtn").textContent=next==="login"?"ログイン":"新規登録";$("nameField").classList.toggle("hide",next==="login");setMessage("")}
-function firebaseError(error){const code=String(error?.code||error?.message||"");if(code.includes("operation-not-allowed"))return "Firebase Consoleでメール/Googleログインを有効にしてください。";if(code.includes("invalid-credential"))return "メールアドレスかパスワードが違います。";if(code.includes("email-already-in-use"))return "登録済みです。ログインに切り替えてください。";if(code.includes("permission-denied"))return "Firestoreの権限で保存できません。ルール設定が必要です。";return "Firebase接続エラー: "+code.replace("Firebase: ","").slice(0,120)}
-async function upsertTeacher(user, name){
-  const ref=doc(db,"users",user.uid);
-  const snap=await getDoc(ref);
-  const displayName=name||user.displayName||user.email||"先生";
-  if(name)await updateProfile(user,{displayName}).catch(()=>{});
-  await setDoc(ref,{uid:user.uid,role:"teacher",accountType:"teacher",email:user.email||"",displayName,updatedAt:serverTimestamp(),createdAt:snap.exists()?snap.data().createdAt:serverTimestamp()},{merge:true});
-  profile={uid:user.uid,email:user.email||"",displayName,role:"teacher"};
-  openPortal();
-}
-async function authSubmit(event){
-  event.preventDefault();
-  const email=$("email").value.trim().toLowerCase();
-  const password=$("password").value;
-  const name=$("teacherName").value.trim();
-  if(!email||password.length<8){setMessage("メールアドレスと8文字以上のパスワードを入力してください。");return}
-  if(mode==="register"&&!name){setMessage("先生ニックネームを入力してください。");return}
-  setMessage("Firebaseに接続しています...",true);
-  try{
-    const cred=mode==="register"?await createUserWithEmailAndPassword(auth,email,password):await signInWithEmailAndPassword(auth,email,password);
-    await upsertTeacher(cred.user,name);
-  }catch(error){setMessage(firebaseError(error))}
-}
-async function googleLogin(){
-  setMessage("Googleログインを開いています...",true);
-  try{const cred=await signInWithPopup(auth,new GoogleAuthProvider());await upsertTeacher(cred.user,cred.user.displayName||"先生")}catch(error){setMessage(firebaseError(error))}
-}
-function openPortal(){
-  $("authView").style.display="none";$("portalView").style.display="block";
-  $("teacherLabel").textContent=profile.displayName||profile.email||"先生";
-  listenClasses();
-}
-function clearSubs(){unsubscribers.forEach(fn=>fn&&fn());unsubscribers=[]}
-function listenClasses(){
-  clearSubs();
-  unsubscribers.push(onSnapshot(query(collection(db,"classes"),where("teacherUid","==",profile.uid)),snap=>{
-    classes=[];snap.forEach(d=>classes.push({id:d.id,...d.data()}));classes.sort((a,b)=>String(a.className).localeCompare(String(b.className),"ja"));
-    renderClassSelect();
-    if(!activeClass&&classes[0])setActiveClass(classes[0].id);
-    if(!classes.length)openClassModal();
-  }));
-}
-function renderClassSelect(){
-  $("classSelect").innerHTML=classes.map(c=>`<option value="${escapeAttr(c.id)}">${escapeHtml(c.className||"クラス")}</option>`).join("");
-  if(activeClass)$("classSelect").value=activeClass.id;
-}
-function setActiveClass(id){
-  activeClass=classes.find(c=>c.id===id)||null;
-  if(!activeClass)return;
-  $("classLabel").textContent=activeClass.className||"クラス";
-  $("activeCode").textContent="招待コード: "+(activeClass.inviteCode||"なし");
-  $("classSelect").value=id;
-  listenClassData();
-}
-function listenClassData(){
-  unsubscribers.slice(1).forEach(fn=>fn&&fn());unsubscribers=unsubscribers.slice(0,1);
-  const classId=activeClass.id;
-  unsubscribers.push(onSnapshot(collection(db,"classes",classId,"students"),snap=>{students=[];snap.forEach(d=>students.push({id:d.id,...d.data()}));renderDashboard()}));
-  unsubscribers.push(onSnapshot(query(collection(db,"usageLogs"),where("classId","==",classId)),snap=>{logs=[];snap.forEach(d=>logs.push({id:d.id,...d.data()}));logs.sort((a,b)=>String(b.startedAt).localeCompare(String(a.startedAt)));renderDashboard()}));
-  unsubscribers.push(onSnapshot(query(collection(db,"messages"),where("classId","==",classId)),snap=>{const messages=[];snap.forEach(d=>messages.push({id:d.id,...d.data()}));messages.sort((a,b)=>String(b.createdAtText).localeCompare(String(a.createdAtText)));renderMessages(messages)}));
-  unsubscribers.push(onSnapshot(query(collection(db,"apps"),where("classId","==",classId)),snap=>{const apps=[];snap.forEach(d=>apps.push({id:d.id,...d.data()}));renderApps(apps)}));
-  unsubscribers.push(onSnapshot(query(collection(db,"replies"),where("classId","==",classId)),snap=>{const replies=[];snap.forEach(d=>replies.push({id:d.id,type:"返信",...d.data()}));renderResponses(replies)}));
-  unsubscribers.push(onSnapshot(query(collection(db,"surveyResponses"),where("classId","==",classId)),snap=>{const responses=[];snap.forEach(d=>responses.push({id:d.id,type:"アンケート",...d.data()}));renderResponses(null,responses)}));
-  unsubscribers.push(onSnapshot(query(collection(db,"printAssignments"),where("classId","==",classId)),snap=>{const assignments=[];snap.forEach(d=>assignments.push({id:d.id,...d.data()}));assignments.sort((a,b)=>String(b.createdAtText).localeCompare(String(a.createdAtText)));renderPrintAssignments(assignments)}));
-  unsubscribers.push(onSnapshot(query(collection(db,"printSubmissions"),where("classId","==",classId)),snap=>{const submissions=[];snap.forEach(d=>submissions.push({id:d.id,...d.data()}));submissions.sort((a,b)=>String(b.submittedAtText||"").localeCompare(String(a.submittedAtText||"")));renderPrintSubmissions(submissions)}));
-}
-function renderDashboard(){
-  const totalSec=logs.reduce((sum,l)=>sum+(Number(l.durationSec)||0),0);
-  const today=new Date().toISOString().slice(0,10);
-  const todaySec=logs.filter(l=>l.dateKey===today).reduce((sum,l)=>sum+(Number(l.durationSec)||0),0);
-  $("studentCount").textContent=students.length;
-  $("totalMinutes").textContent=Math.round(totalSec/60);
-  $("todayMinutes").textContent=Math.round(todaySec/60);
-  const byStudent=new Map();
-  logs.forEach(l=>{const key=l.studentId||l.uid||l.realName||"unknown";const current=byStudent.get(key)||{name:l.realName||key,sec:0};current.sec+=Number(l.durationSec)||0;byStudent.set(key,current)});
-  const rows=[...byStudent.values()].sort((a,b)=>b.sec-a.sec);
-  const max=Math.max(1,...rows.map(r=>r.sec));
-  $("studentChart").innerHTML=rows.length?rows.map(r=>`<div class="barRow"><b>${escapeHtml(r.name)}</b><div class="barTrack"><div class="barFill" style="width:${Math.max(6,r.sec/max*100)}%"></div></div><span>${Math.round(r.sec/60)}分</span></div>`).join(""):'<p class="hint">まだ利用ログがありません。</p>';
-  $("logRows").innerHTML=logs.slice(0,12).map(l=>`<tr><td>${escapeHtml(l.realName||l.studentId||"児童")}</td><td>${escapeHtml(l.appTitle||l.appId||"アプリ")}</td><td>${escapeHtml(formatDate(l.startedAt))}</td><td>${Math.round((Number(l.durationSec)||0)/60)}分</td></tr>`).join("")||'<tr><td colspan="4">まだログがありません。</td></tr>';
-  $("studentRows").innerHTML=students.map(s=>`<tr><td>${escapeHtml(s.realName||"")}</td><td>${escapeHtml(s.studentId||s.id)}</td><td>${escapeHtml(formatJoined(s))}</td></tr>`).join("")||'<tr><td colspan="3">まだ児童が参加していません。</td></tr>';
-}
-function renderMessages(messages){
-  $("sentMessages").innerHTML=messages.length?messages.map(m=>`<div class="card"><b>${escapeHtml(m.title||"連絡")}</b><p style="color:var(--muted);line-height:1.6">${escapeHtml(m.body||"")}</p><span class="pill">${m.allowReply?"返信可":"返信なし"}${m.survey?" / アンケート":""}</span></div>`).join(""):'<p class="hint">まだ送信済み連絡はありません。</p>';
-}
-let lastReplies=[];
-let lastSurveys=[];
-function renderResponses(replies, surveys){
-  if(replies)lastReplies=replies;
-  if(surveys)lastSurveys=surveys;
-  const items=[...lastReplies,...lastSurveys].sort((a,b)=>String(b.createdAtText||"").localeCompare(String(a.createdAtText||"")));
-  $("responsesList").innerHTML=items.length?items.slice(0,20).map(item=>`<div class="card"><b>${escapeHtml(item.type)} / ${escapeHtml(item.realName||item.studentId||"児童")}</b><p class="hint">${escapeHtml(item.text||JSON.stringify(item.answers||{}))}</p><span class="pill">${escapeHtml(item.createdAtText||"")}</span></div>`).join(""):'<p class="hint">返信や回答はまだありません。</p>';
-}
-function renderApps(apps){
-  $("appsList").innerHTML=apps.length?apps.map(a=>`<div class="card"><b>${escapeHtml(a.icon||"📘")} ${escapeHtml(a.title)}</b><p class="hint">${escapeHtml(a.description||a.url)}</p><span class="pill">${escapeHtml(a.url)}</span></div>`).join(""):'<p class="hint">追加アプリはまだありません。</p>';
-}
-function renderPrintAssignments(assignments){
-  $("printAssignments").innerHTML=assignments.length?assignments.map(a=>`<div class="card"><b>${escapeHtml(a.title||"デジタルプリント")}</b><p class="hint">${escapeHtml(a.body||"")}</p><span class="pill">${(a.questions||[]).length}問 / ${escapeHtml(a.createdAtText||"")}</span></div>`).join(""):'<p class="hint">まだプリントを配信していません。</p>';
-}
-function renderPrintSubmissions(submissions){
-  $("printSubmissions").innerHTML=submissions.length?submissions.slice(0,30).map(s=>{const answers=s.answers||{};const body=Object.entries(answers).map(([q,a])=>`<p class="hint"><b>${escapeHtml(q)}</b><br>${escapeHtml(a||"未記入")}</p>`).join("");return `<div class="card"><b>${escapeHtml(s.realName||s.studentId||"児童")}</b><span class="pill">${escapeHtml(s.submittedAtText||"")}</span>${body}</div>`}).join(""):'<p class="hint">提出はまだありません。</p>';
-}
-function openClassModal(){$("classModal").classList.remove("hide");$("classTeacherName").value=profile.displayName||""}
-function closeClassModal(){$("classModal").classList.add("hide")}
-async function createClass(event){
-  event.preventDefault();
-  const teacherName=$("classTeacherName").value.trim()||profile.displayName||"先生";
-  const className=$("className").value.trim();
-  if(!className){toast("クラス名を入力してください");return}
-  let code="";
-  for(let i=0;i<12;i++){code="SNX-"+randomPart(4);if(!(await getDoc(doc(db,"invites",code))).exists())break}
-  const classRef=doc(collection(db,"classes"));
-  const data={classId:classRef.id,className,teacherUid:profile.uid,teacherName,inviteCode:code,createdAt:serverTimestamp(),createdAtText:new Date().toLocaleString("ja-JP")};
-  await setDoc(classRef,data);
-  await setDoc(doc(db,"invites",code),{...data,active:true});
-  await setDoc(doc(db,"users",profile.uid),{displayName:teacherName,role:"teacher",updatedAt:serverTimestamp()},{merge:true});
-  profile.displayName=teacherName;
-  $("teacherLabel").textContent=teacherName;
-  closeClassModal();
-  toast("招待コード: "+code);
-}
-async function sendMessage(event){
-  event.preventDefault();
-  if(!activeClass){toast("クラスを作成してください");return}
-  const title=$("messageTitle").value.trim();
-  const body=$("messageBody").value.trim();
-  if(!title||!body){toast("タイトルと本文を入力してください");return}
-  const survey=$("withSurvey").checked?parseSurvey($("surveyLines").value):null;
-  await addDoc(collection(db,"messages"),{classId:activeClass.id,teacherUid:profile.uid,title,body,allowReply:$("allowReply").checked,survey,createdAt:serverTimestamp(),createdAtText:new Date().toLocaleString("ja-JP")});
-  event.target.reset();$("surveyField").classList.add("hide");toast("連絡を送信しました");
-}
-function parseSurvey(text){
-  const questions=String(text||"").split(/\r?\n/).map(line=>line.trim()).filter(Boolean).map(line=>{const parts=line.split("|");return {text:parts[0].trim(),options:parts[1]?parts[1].split(",").map(s=>s.trim()).filter(Boolean):[]}});
-  return {questions};
-}
-async function addApp(event){
-  event.preventDefault();
-  if(!activeClass){toast("クラスを作成してください");return}
-  const title=$("appTitle").value.trim();
-  const url=$("appUrl").value.trim();
-  if(!title||!url){toast("アプリ名とURLを入力してください");return}
-  await addDoc(collection(db,"apps"),{classId:activeClass.id,teacherUid:profile.uid,title,url,description:$("appDescription").value.trim(),icon:$("appIcon").value.trim()||"📘",createdAt:serverTimestamp(),createdAtText:new Date().toLocaleString("ja-JP")});
-  event.target.reset();toast("アプリを登録しました");
-}
-async function sendPrint(event){
-  event.preventDefault();
-  if(!activeClass){toast("クラスを作成してください");return}
-  const title=$("printTitle").value.trim();
-  const body=$("printBody").value.trim();
-  const questions=$("printQuestions").value.split(/\r?\n/).map(v=>v.trim()).filter(Boolean);
-  if(!title||!questions.length){toast("タイトルと問題を入力してください");return}
-  await addDoc(collection(db,"printAssignments"),{classId:activeClass.id,teacherUid:profile.uid,title,body,questions,createdAt:serverTimestamp(),createdAtText:new Date().toLocaleString("ja-JP")});
-  event.target.reset();
-  toast("プリントを配信しました");
-}
-function showPanel(name){
-  const map={dashboard:["ダッシュボード","児童の学習時間とアプリ利用を確認します。"],messages:["連絡・アンケート","児童portalへ連絡を送り、返信と回答を確認します。"],prints:["デジタルプリント","先生が課題を配り、児童はそこに記入して提出します。"],apps:["アプリ一覧登録","児童portalに表示する外部サイトや教材を追加します。"]};
-  for(const key of Object.keys(map)){
-    $(key+"Tab").classList.toggle("active",key===name);
-    $(key+"Panel").classList.toggle("hide",key!==name);
-  }
-  $("pageTitle").textContent=map[name][0];$("pageLead").textContent=map[name][1];
-}
-function formatDate(value){if(!value)return "";const date=typeof value==="string"?new Date(value):value;return Number.isNaN(date.getTime())?String(value):date.toLocaleString("ja-JP",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"})}
-function formatJoined(student){if(student.joinedAtText)return student.joinedAtText;if(student.joinedAt?.seconds)return formatDate(new Date(student.joinedAt.seconds*1000));return ""}
-function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[ch]))}
-function escapeAttr(value){return escapeHtml(value).replace(/"/g,"&quot;")}
-
-$("loginTab").onclick=()=>setMode("login");
-$("registerTab").onclick=()=>setMode("register");
-$("authForm").onsubmit=authSubmit;
-$("googleBtn").onclick=googleLogin;
-$("logoutBtn").onclick=async()=>{await signOut(auth).catch(()=>{});location.reload()};
-$("classSelect").onchange=event=>setActiveClass(event.target.value);
-$("newClassBtn").onclick=openClassModal;
-$("cancelClass").onclick=closeClassModal;
-$("classForm").onsubmit=createClass;
-$("messageForm").onsubmit=sendMessage;
-$("withSurvey").onchange=event=>$("surveyField").classList.toggle("hide",!event.target.checked);
-$("appForm").onsubmit=addApp;
-$("printForm").onsubmit=sendPrint;
-$("dashboardTab").onclick=()=>showPanel("dashboard");
-$("messagesTab").onclick=()=>showPanel("messages");
-$("printsTab").onclick=()=>showPanel("prints");
-$("appsTab").onclick=()=>showPanel("apps");
-onAuthStateChanged(auth,async user=>{if(!user)return;const snap=await getDoc(doc(db,"users",user.uid)).catch(()=>null);if(snap?.exists()&&snap.data().role==="teacher"){profile={uid:user.uid,...snap.data()};openPortal()}});
+const token=()=>localStorage.getItem(TOKEN_KEY)||'';
+const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(message){$('toast').textContent=message;$('toast').style.opacity='1';$('toast').style.bottom='32px';setTimeout(()=>{$('toast').style.opacity='0';$('toast').style.bottom='22px'},2400)}
+function apiError(error){return {invalid_credentials:'メールかパスワードが違います',already_exists:'すでに登録されています',invalid_input:'入力内容を確認してください',invalid_class:'クラスを選んでください',invalid_session:'ログインし直してください'}[error?.message]||('APIエラー: '+(error?.message||error))}
+async function api(path,options={}){const res=await fetch(API_BASE+path,{...options,headers:{'Content-Type':'application/json',...(token()?{Authorization:'Bearer '+token()}:{}),...(options.headers||{})}});const json=await res.json().catch(()=>({ok:false,error:'invalid_json'}));if(!res.ok||json.ok===false)throw new Error(json.error||'api_error');return json}
+function setMode(next){mode=next;$('loginTab').classList.toggle('active',next==='login');$('registerTab').classList.toggle('active',next==='register');$('teacherNameWrap').style.display=next==='register'?'grid':'none';$('authSubmit').textContent=next==='register'?'新規登録する':'ログインする'}
+async function handleAuth(event){event.preventDefault();$('authStatus').textContent='接続中...';try{const res=await api('/api/auth',{method:'POST',body:JSON.stringify({action:mode,role:'teacher',email:$('emailInput').value.trim(),password:$('passwordInput').value,displayName:$('teacherNameInput').value.trim()})});localStorage.setItem(TOKEN_KEY,res.token);localStorage.setItem(PROFILE_KEY,JSON.stringify(res.user));profile=res.user;await openPortal()}catch(error){$('authStatus').textContent=apiError(error)}}
+function loadProfile(){try{return JSON.parse(localStorage.getItem(PROFILE_KEY)||'null')}catch{return null}}
+async function openPortal(){profile=profile||loadProfile();$('authView').style.display='none';$('portalView').style.display='block';$('meSub').textContent=(profile.displayName||profile.email||'先生')+' / GitHub private DB API';await refreshData()}
+async function refreshData(){try{data=await api('/api/bootstrap');profile=data.profile||profile;localStorage.setItem(PROFILE_KEY,JSON.stringify(profile));$('apiStatus').textContent='接続OK';$('apiStatus').className='badge status-ok';renderAll()}catch(error){$('apiStatus').textContent='API未接続';$('apiStatus').className='badge status-bad';toast(apiError(error))}}
+function classes(){return data.classes||[]}function selectedClassId(selectId){return $(selectId).value || classes()[0]?.id || ''}
+function fillClassSelects(){['messageClass','printClass','appClass'].forEach(id=>{$(id).innerHTML=classes().map(c=>`<option value="${escapeHtml(c.id)}">${escapeHtml(c.className)} / ${escapeHtml(c.inviteCode)}</option>`).join('')})}
+function renderAll(){fillClassSelects();renderStats();renderClasses();renderStudents();renderLogs();renderReplies();renderSubmissions();renderApps();applyTheme()}
+function renderStats(){const logs=data.usageLogs||[];$('studentCount').textContent=(data.students||[]).length;$('logCount').textContent=logs.length;$('totalMinutes').textContent=Math.round(logs.reduce((s,l)=>s+(Number(l.durationSec)||0),0)/60*10)/10+'分';renderChart(logs)}
+function renderChart(logs){const by={};logs.forEach(l=>{const k=l.dateKey||String(l.endedAt||l.createdAt||'').slice(0,10)||'unknown';by[k]=(by[k]||0)+(Number(l.durationSec)||0)});const entries=Object.entries(by).sort().slice(-7);const max=Math.max(60,...entries.map(([,v])=>v));$('chart').innerHTML=entries.length?entries.map(([date,sec])=>`<div class="bar"><span>${escapeHtml(date)}</span><div class="bar-line"><span style="width:${Math.max(4,sec/max*100)}%"></span></div><b>${Math.round(sec/60*10)/10}分</b></div>`).join(''):'<div class="empty">まだログがありません。</div>'}
+function renderClasses(){$('classList').innerHTML=classes().length?classes().map(c=>`<div class="item"><h3>${escapeHtml(c.className)}</h3><p>招待コード: <b>${escapeHtml(c.inviteCode)}</b><br>${escapeHtml(c.createdAtText||'')}</p><button class="secondary" type="button" data-copy="${escapeHtml(c.inviteCode)}">コードをコピー</button></div>`).join(''):'<div class="empty">まずクラスを作成してください。</div>';$('classList').querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>copyText(b.dataset.copy))}
+function renderStudents(){const logs=data.usageLogs||[];$('studentList').innerHTML=(data.students||[]).length?(data.students||[]).map(st=>{const own=logs.filter(l=>l.studentId===st.studentId);const last=own.slice().sort((a,b)=>String(b.endedAt||'').localeCompare(String(a.endedAt||'')))[0];const min=Math.round(own.reduce((s,l)=>s+(Number(l.durationSec)||0),0)/60*10)/10;return `<div class="item"><h3>${escapeHtml(st.realName)}</h3><p>ID: ${escapeHtml(st.studentId)} / ${escapeHtml(st.className)}<br>合計 ${min}分${last?` / 最新: ${escapeHtml(last.appTitle)} ${escapeHtml(last.endedAt||last.createdAt||'')}`:''}</p></div>`}).join(''):'<div class="empty">招待コードで児童が入るとここに表示されます。</div>'}
+function renderLogs(){const logs=(data.usageLogs||[]).slice().sort((a,b)=>String(b.endedAt||b.createdAt||'').localeCompare(String(a.endedAt||a.createdAt||''))).slice(0,30);$('logList').innerHTML=logs.length?logs.map(l=>`<div class="item"><h3>${escapeHtml(l.realName||'児童')}</h3><p>${escapeHtml(l.appTitle)} / ${Math.round((Number(l.durationSec)||0)/60*10)/10}分 / ${escapeHtml(l.endedAt||l.createdAt||'')}</p></div>`).join(''):'<div class="empty">まだ利用ログがありません。</div>'}
+function renderReplies(){const replies=data.replies||[], surveys=data.surveyResponses||[];$('replyList').innerHTML=(replies.length||surveys.length)?[...replies.map(r=>`<div class="item"><h3>返信: ${escapeHtml(r.realName)}</h3><p>${escapeHtml(r.text)}<br>${escapeHtml(r.createdAtText||'')}</p></div>`),...surveys.map(s=>`<div class="item"><h3>アンケート: ${escapeHtml(s.realName)}</h3><p>${escapeHtml(Object.values(s.answers||{}).join('\\n'))}<br>${escapeHtml(s.createdAtText||'')}</p></div>`)].join(''):'<div class="empty">返信・アンケート回答はまだありません。</div>'}
+function renderSubmissions(){const submissions=data.printSubmissions||[];$('submissionList').innerHTML=submissions.length?submissions.map(s=>`<div class="item"><h3>${escapeHtml(s.realName)}</h3><p>${escapeHtml(Object.entries(s.answers||{}).map(([k,v])=>`${Number(k)+1}. ${v}`).join('\\n'))}<br>${escapeHtml(s.submittedAtText||'')}</p></div>`).join(''):'<div class="empty">提出はまだありません。</div>'}
+function renderApps(){$('appList').innerHTML=(data.apps||[]).length?(data.apps||[]).map(app=>`<div class="item"><h3>${escapeHtml(app.icon||'📘')} ${escapeHtml(app.title)}</h3><p>${escapeHtml(app.url)}<br>${escapeHtml(app.description||'')}</p></div>`).join(''):'<div class="empty">クラス専用アプリはまだ追加されていません。</div>'}
+async function createClass(event){event.preventDefault();try{await api('/api/classes',{method:'POST',body:JSON.stringify({className:$('classNameInput').value,teacherName:$('classTeacherInput').value||profile.displayName})});toast('クラスを作成しました');event.target.reset();await refreshData()}catch(error){toast(apiError(error))}}
+async function createMessage(event){event.preventDefault();try{const qs=$('surveyQuestions').value.split('\\n').map(x=>x.trim()).filter(Boolean);await api('/api/messages',{method:'POST',body:JSON.stringify({classId:selectedClassId('messageClass'),title:$('messageTitle').value,body:$('messageBody').value,allowReply:$('allowReply').checked,survey:$('enableSurvey').checked?{questions:qs.map((text,i)=>({id:'q'+i,text,type:'text'}))}:null})});toast('連絡を送信しました');event.target.reset();await refreshData()}catch(error){toast(apiError(error))}}
+async function createPrint(event){event.preventDefault();try{await api('/api/prints',{method:'POST',body:JSON.stringify({classId:selectedClassId('printClass'),title:$('printTitle').value,body:$('printBody').value,questions:$('printQuestions').value.split('\\n').map(x=>x.trim()).filter(Boolean)})});toast('プリントを配信しました');event.target.reset();await refreshData()}catch(error){toast(apiError(error))}}
+async function createApp(event){event.preventDefault();try{await api('/api/apps',{method:'POST',body:JSON.stringify({classId:selectedClassId('appClass'),title:$('appTitle').value,url:$('appUrl').value,description:$('appDescription').value,icon:$('appIcon').value||'📘'})});toast('アプリを追加しました');event.target.reset();await refreshData()}catch(error){toast(apiError(error))}}
+function showTab(name){['dashboard','messages','prints','apps','settings'].forEach(key=>{const panel=$(key+'Panel');if(panel)panel.style.display=key===name?'block':'none';$(key+'Tab').classList.toggle('active',key===name)})}
+function applyTheme(){const theme=localStorage.getItem('studynext_teacher_theme')||'light';document.body.classList.toggle('theme-night',theme==='night');$('themeSelect').value=theme}
+async function copyText(text){try{await navigator.clipboard.writeText(text);toast('コピーしました')}catch{prompt('コピーしてください',text)}}
+$('loginTab').onclick=()=>setMode('login');$('registerTab').onclick=()=>setMode('register');$('authForm').onsubmit=handleAuth;$('classForm').onsubmit=createClass;$('messageForm').onsubmit=createMessage;$('printForm').onsubmit=createPrint;$('appForm').onsubmit=createApp;$('refreshBtn').onclick=()=>refreshData();$('logoutBtn').onclick=()=>{localStorage.removeItem(TOKEN_KEY);localStorage.removeItem(PROFILE_KEY);location.reload()};['dashboard','messages','prints','apps','settings'].forEach(k=>$(k+'Tab').onclick=()=>showTab(k));$('copyStudentUrlBtn').onclick=()=>copyText(STUDENT_URL);$('copyTeacherUrlBtn').onclick=()=>copyText(TEACHER_URL);$('copyStudentIframeBtn').onclick=()=>copyText(`<iframe src="${STUDENT_URL}" style="width:100%;height:760px;border:0;border-radius:12px" loading="lazy" allow="fullscreen; clipboard-write"></iframe>`);$('copyTeacherIframeBtn').onclick=()=>copyText(`<iframe src="${TEACHER_URL}" style="width:100%;height:760px;border:0;border-radius:12px" loading="lazy" allow="fullscreen; clipboard-write"></iframe>`);$('themeForm').onsubmit=e=>{e.preventDefault();localStorage.setItem('studynext_teacher_theme',$('themeSelect').value);applyTheme();toast('保存しました')};
+setMode('login');applyTheme();if(token()){profile=loadProfile();openPortal().catch(()=>{localStorage.removeItem(TOKEN_KEY);localStorage.removeItem(PROFILE_KEY);location.reload()})}
 </script>
 </body>
 </html>
