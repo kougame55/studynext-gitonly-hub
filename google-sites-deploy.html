@@ -3,74 +3,60 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>StudyNext Google Sites デプロイ</title>
+<title>StudyNext Google Sites 貼り付けキット</title>
 <style>
-:root{--bg:#f6f9ff;--ink:#142033;--muted:#65758d;--panel:#fff;--panel2:#eef5ff;--line:#d9e5f6;--accent:#1769ff;--accent2:#00a7c8;--ok:#0f9f6e;--shadow:0 18px 54px rgba(38,74,130,.16);--radius:12px}
-*{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:linear-gradient(135deg,#f7fbff,#eaf4ff);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI","Noto Sans JP",sans-serif}
-.wrap{width:min(980px,100%);margin:auto;padding:26px}
-.hero,.card{border:1px solid var(--line);background:rgba(255,255,255,.94);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
-.hero{margin-bottom:16px}
-.brand{font-weight:1000;color:var(--accent);letter-spacing:.02em}
-h1{font-size:clamp(2rem,6vw,4rem);line-height:1;margin:14px 0}
-p{color:var(--muted);line-height:1.7}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.field{display:grid;gap:6px;margin:12px 0;color:var(--muted);font-weight:900;font-size:.86rem}
-input,textarea{width:100%;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);padding:12px;font:inherit}
-textarea{min-height:128px;resize:vertical}
-button,a.btn{display:inline-flex;justify-content:center;align-items:center;border:0;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-weight:950;text-decoration:none;padding:12px 14px;cursor:pointer}
-.row{display:flex;gap:10px;flex-wrap:wrap}
-.check{display:grid;gap:8px;margin-top:12px}
-.check div{border:1px solid var(--line);background:var(--panel2);border-radius:10px;padding:10px;color:var(--muted)}
-.ok{color:var(--ok);font-weight:950}
-.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#142033;color:#fff;border-radius:10px;padding:12px 16px;font-weight:950;display:none}
-.toast.show{display:block}
-@media(max-width:780px){.grid{grid-template-columns:1fr}.wrap{padding:14px}}
+:root{--bg:#f6f9ff;--panel:#fff;--panel2:#eef5ff;--line:#d9e5f6;--ink:#142033;--muted:#65758d;--brand:#1769ff;--brand2:#00a7c8;--good:#0f9f6e;--bad:#d9365f;--shadow:0 18px 54px rgba(38,74,130,.16);--radius:22px;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI","Noto Sans JP",sans-serif}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at top left,rgba(23,105,255,.18),transparent 30%),var(--bg);color:var(--ink);font-family:inherit}.wrap{width:min(980px,100%);margin:0 auto;padding:24px}.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;margin-bottom:16px}.brand{display:flex;align-items:center;gap:10px;font-weight:950;color:var(--brand)}.mark{display:grid;place-items:center;width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:white}h1{font-size:clamp(2rem,5vw,3.8rem);line-height:1.05;margin:18px 0 12px;letter-spacing:-.05em}.lead,p{color:var(--muted);line-height:1.7}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.url{word-break:break-all;border:1px solid var(--line);background:var(--panel2);padding:14px;border-radius:16px;font-weight:800}button,a.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:white;text-decoration:none;font-weight:900;cursor:pointer}.secondary{background:var(--panel2);color:var(--ink)}textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:16px;padding:14px;background:var(--panel2);color:var(--ink);font:inherit}.ok{color:var(--good);font-weight:950}.bad{color:var(--bad);font-weight:950}@media(max-width:720px){.grid{grid-template-columns:1fr}.wrap{padding:14px}.card{padding:16px;border-radius:18px}}
 </style>
 </head>
 <body>
 <main class="wrap">
-  <section class="hero">
-    <div class="brand">StudyNext Hub / Google Sites Deploy Kit</div>
-    <h1>Google Sitesに貼るだけ。</h1>
-    <p>おすすめは「挿入 → 埋め込む → URL」です。HTMLコードで埋め込む場合も、下のiframeコードをそのまま貼れます。</p>
-    <div class="check">
-      <div><span class="ok">済</span> Firestoreルール本番反映</div>
-      <div><span class="ok">済</span> GitHub Pages公開</div>
-      <div><span class="ok">済</span> アプリURLをGoogle Sites向けに絶対URL化</div>
-      <div><span class="ok">確認</span> Authでエラーが出る時は診断ページで状態確認</div>
-    </div>
-    <div class="row" style="margin-top:14px"><a class="btn" href="firebase-auth-check.html" target="_blank" rel="noopener">Firebase Auth診断を開く</a></div>
+  <section class="card">
+    <div class="brand"><span class="mark">SN</span>StudyNext Deploy Kit</div>
+    <h1>Google Sitesに<br>このURLを埋め込めばOK。</h1>
+    <p class="lead">Firebaseなし・クレカなし。本命構成は「GitHub PagesのHTML + このPCのStudyNext API + GitHub private DB」です。HTMLにはGitHubトークンを入れていません。</p>
+    <button id="apiCheckBtn" type="button">API接続を確認</button>
+    <span id="apiStatus">未確認</span>
   </section>
   <section class="grid">
-    <article class="card">
-      <h2>児童ポータル</h2>
-      <p>児童がログインして、アプリ・プリント・メッセージ・設定を使う入口です。</p>
-      <label class="field">URL<input id="studentUrl" readonly></label>
-      <label class="field">iframeコード<textarea id="studentIframe" readonly></textarea></label>
-      <div class="row"><button type="button" data-copy="studentUrl">URLをコピー</button><button type="button" data-copy="studentIframe">iframeをコピー</button><a class="btn" id="studentOpen" target="_blank" rel="noopener">開く</a></div>
-    </article>
-    <article class="card">
-      <h2>先生ポータル</h2>
-      <p>クラス作成、招待コード、連絡、アンケート、デジタルプリント、アプリ追加を使います。</p>
-      <label class="field">URL<input id="teacherUrl" readonly></label>
-      <label class="field">iframeコード<textarea id="teacherIframe" readonly></textarea></label>
-      <div class="row"><button type="button" data-copy="teacherUrl">URLをコピー</button><button type="button" data-copy="teacherIframe">iframeをコピー</button><a class="btn" id="teacherOpen" target="_blank" rel="noopener">開く</a></div>
-    </article>
+    <div class="card">
+      <h2>児童用ポータル</h2>
+      <p>Google Sites の「挿入 → 埋め込む → URL」に入れます。</p>
+      <div id="studentUrl" class="url"></div>
+      <p><a id="studentOpen" class="btn" target="_blank" rel="noopener">開く</a> <button id="copyStudentUrl" class="secondary" type="button">URLコピー</button></p>
+      <textarea id="studentIframe" readonly></textarea>
+      <p><button id="copyStudentIframe" class="secondary" type="button">iframeコピー</button></p>
+    </div>
+    <div class="card">
+      <h2>先生用ポータル</h2>
+      <p>先生サイト側に入れます。招待コード作成、連絡、プリント、ログ確認ができます。</p>
+      <div id="teacherUrl" class="url"></div>
+      <p><a id="teacherOpen" class="btn" target="_blank" rel="noopener">開く</a> <button id="copyTeacherUrl" class="secondary" type="button">URLコピー</button></p>
+      <textarea id="teacherIframe" readonly></textarea>
+      <p><button id="copyTeacherIframe" class="secondary" type="button">iframeコピー</button></p>
+    </div>
+  </section>
+  <section class="card">
+    <h2>使う順番</h2>
+    <ol>
+      <li>先生用ポータルで先生アカウントを新規登録。</li>
+      <li>クラスを作成して招待コードを発行。</li>
+      <li>児童用ポータルで「学校アカウント」を選び、招待コードと本名を入力。</li>
+      <li>SPEED算数などのアプリを使うと、学習ログが先生側に保存されます。</li>
+    </ol>
+    <p><b>重要:</b> このPCのAPIとトンネルが止まるとログイン・保存は止まります。PCをスリープさせないでください。</p>
   </section>
 </main>
-<div id="toast" class="toast">コピーしました</div>
 <script>
-const urls={
-  student:"https://kougame55.github.io/studynext-gitonly-hub/",
-  teacher:"https://kougame55.github.io/studynext-gitonly-hub/teacher.html"
-};
-function iframe(url){return `<iframe src="${url}" style="width:100%;height:760px;border:0;border-radius:12px" loading="lazy" allow="fullscreen; clipboard-write"></iframe>`}
-studentUrl.value=urls.student;teacherUrl.value=urls.teacher;
-studentIframe.value=iframe(urls.student);teacherIframe.value=iframe(urls.teacher);
-studentOpen.href=urls.student;teacherOpen.href=urls.teacher;
-function toast(){const el=document.getElementById("toast");el.classList.add("show");setTimeout(()=>el.classList.remove("show"),1800)}
-document.querySelectorAll("[data-copy]").forEach(button=>button.onclick=async()=>{const target=document.getElementById(button.dataset.copy);target.select();try{await navigator.clipboard.writeText(target.value)}catch{document.execCommand("copy")}toast()});
+const API_BASE='https://2a0bc38fede535.lhr.life';
+const STUDENT_URL='https://kougame55.github.io/studynext-gitonly-hub/';
+const TEACHER_URL='https://kougame55.github.io/studynext-gitonly-hub/teacher.html';
+const studentIframeCode=`<iframe src="${STUDENT_URL}" style="width:100%;height:760px;border:0;border-radius:12px" loading="lazy" allow="fullscreen; clipboard-write"></iframe>`;
+const teacherIframeCode=`<iframe src="${TEACHER_URL}" style="width:100%;height:760px;border:0;border-radius:12px" loading="lazy" allow="fullscreen; clipboard-write"></iframe>`;
+studentUrl.textContent=STUDENT_URL;teacherUrl.textContent=TEACHER_URL;studentOpen.href=STUDENT_URL;teacherOpen.href=TEACHER_URL;studentIframe.value=studentIframeCode;teacherIframe.value=teacherIframeCode;
+async function copyText(text){try{await navigator.clipboard.writeText(text);alert('コピーしました')}catch{prompt('コピーしてください',text)}}
+copyStudentUrl.onclick=()=>copyText(STUDENT_URL);copyTeacherUrl.onclick=()=>copyText(TEACHER_URL);copyStudentIframe.onclick=()=>copyText(studentIframeCode);copyTeacherIframe.onclick=()=>copyText(teacherIframeCode);
+apiCheckBtn.onclick=async()=>{apiStatus.textContent='確認中...';try{const res=await fetch(API_BASE+'/health');const data=await res.json();apiStatus.textContent=data.ok?' OK: '+API_BASE:' NG';apiStatus.className=data.ok?'ok':'bad'}catch(error){apiStatus.textContent=' NG: APIが起動していないか、公開URLが変わっています';apiStatus.className='bad'}};
 </script>
 </body>
 </html>
