@@ -90,34 +90,25 @@ function endGame(){clearInterval(GS.interval);showScreen('result');GS.totalCorre
 document.addEventListener('keydown',e=>{if(!document.getElementById('screen-game').classList.contains('active')||GS.locked)return;if(typeArea.style.display==='block'&&e.key==='Enter')submitTyped();if(choices.style.display==='grid'&&['1','2','3','4'].includes(e.key)){const i=Number(e.key)-1;if(GS.choices[i])answerChoice(i)}});
 (function init(){load();const email=activeEmail();if(email)GS.name=email.split('@')[0].slice(0,12)||GS.name;GS.unit=CURRICULUM[1][0][0];updateStart()})();
 </script>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
-
-const firebaseConfig={apiKey:"AIzaSyCj_N-tjM2neCfiNyQljKcPsg-JOKggBt8",authDomain:"studynext-14fab.firebaseapp.com",projectId:"studynext-14fab",storageBucket:"studynext-14fab.firebasestorage.app",messagingSenderId:"518208905501",appId:"1:518208905501:web:0f0be33ae5009a11ab81f4",measurementId:"G-9ES3W12YL5"};
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-const db=getFirestore(app);
-const PROFILE_KEY="studynext_profile_v3";
-let firebaseUser=null;
-let appStartedAt=new Date();
-let finished=false;
-function profile(){try{return JSON.parse(localStorage.getItem(PROFILE_KEY)||"null")}catch{return null}}
-async function writeUsage(extra={}){
-  if(finished&&extra.event!=="page_close")return;
-  if(extra.event!=="page_close")finished=true;
-  const p=profile();
-  if(!p&&!firebaseUser)return;
-  const endedAt=new Date();
-  const durationSec=Math.max(1,Math.round((endedAt-appStartedAt)/1000));
-  const payload={uid:p?.uid||firebaseUser?.uid||"",studentId:p?.studentId||"",realName:p?.realName||p?.displayName||p?.email||"",classId:p?.classId||"",teacherUid:p?.teacherUid||"",appId:"speed",appTitle:"SPEED算数",startedAt:appStartedAt.toISOString(),endedAt:endedAt.toISOString(),durationSec,dateKey:endedAt.toISOString().slice(0,10),...extra};
-  if(window.parent&&window.parent!==window){try{parent.postMessage({type:"studynext:usage",payload},"*")}catch{}return}
-  try{await addDoc(collection(db,"usageLogs"),{...payload,createdAt:serverTimestamp()})}catch(error){console.warn("StudyNext usage log failed",error)}
-}
-window.StudyNextUsage={finishGame:result=>writeUsage({event:"game_result",result})};
-window.addEventListener("beforeunload",()=>{if(!finished)writeUsage({event:"page_close"})});
-onAuthStateChanged(auth,user=>{firebaseUser=user});
+<script>
+const StudyNextUsageBridge=(()=>{
+  const PROFILE_KEY="studynext_profile_v3";
+  let appStartedAt=new Date();
+  let finished=false;
+  function profile(){try{return JSON.parse(localStorage.getItem(PROFILE_KEY)||"null")}catch{return null}}
+  function writeUsage(extra={}){
+    if(finished&&extra.event!=="page_close")return;
+    if(extra.event!=="page_close")finished=true;
+    const p=profile()||{};
+    const endedAt=new Date();
+    const durationSec=Math.max(1,Math.round((endedAt-appStartedAt)/1000));
+    const payload={uid:p.uid||"",studentId:p.studentId||"",realName:p.realName||p.displayName||p.email||"",classId:p.classId||"",teacherUid:p.teacherUid||"",appId:"speed",appTitle:"SPEED算数",startedAt:appStartedAt.toISOString(),endedAt:endedAt.toISOString(),durationSec,dateKey:endedAt.toISOString().slice(0,10),...extra};
+    if(window.parent&&window.parent!==window){try{parent.postMessage({type:"studynext:usage",payload},"*")}catch{}}
+  }
+  window.StudyNextUsage={finishGame:result=>writeUsage({event:"game_result",result})};
+  window.addEventListener("beforeunload",()=>{if(!finished)writeUsage({event:"page_close"})});
+  return {writeUsage};
+})();
 </script>
 </body>
 </html>
