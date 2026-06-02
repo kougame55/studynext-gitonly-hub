@@ -208,6 +208,7 @@ async function handleSchoolSubmit(event){
 }
 function firebaseError(error){
   const code=String(error?.code||error?.message||"");
+  if(code.includes("configuration-not-found")||code.includes("CONFIGURATION_NOT_FOUND"))return "Firebase Authenticationがまだ開始されていません。Firebase Console → Authentication → 始める を押して、Email/Password・Google・匿名を有効にしてください。";
   if(code.includes("operation-not-allowed"))return "Firebase Consoleでログイン方式（メール/Google/匿名）を有効にしてください。";
   if(code.includes("invalid-invite"))return "招待コードが見つかりません。先生に確認してください。";
   if(code.includes("wrong-password")||code.includes("invalid-credential"))return "メールアドレスかパスワードが違います。";
