@@ -58,7 +58,7 @@ service cloud.firestore {
     }
 
     match /usageLogs/{logId} {
-      allow read: if isTeacher();
+      allow read: if isTeacher() || (signedIn() && resource.data.uid == request.auth.uid);
       allow create: if signedIn();
     }
 
