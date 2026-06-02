@@ -73,6 +73,19 @@ body.theme-contrast{--bg:#fff;--ink:#0b1220;--muted:#334155;--panel:#fff;--panel
           <button class="primary" type="submit">保存</button>
           <p class="hint" style="text-align:left">この設定は児童ポータルと追加アプリの見た目に使います。</p>
         </form>
+        <div class="card" style="max-width:720px;margin-top:14px">
+          <h3 style="margin:0 0 10px">Google Sites埋め込み</h3>
+          <p class="hint" style="text-align:left">Google Sitesでは「挿入 → 埋め込む → URL」に下のURLを入れるのが一番安定します。</p>
+          <label class="field">児童ポータルURL<input id="sitesStudentUrl" readonly value="https://kougame55.github.io/studynext-gitonly-hub/"></label>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button id="copyStudentUrlBtn" class="secondary" type="button">URLをコピー</button>
+            <button id="copyStudentIframeBtn" class="secondary" type="button">iframeコードをコピー</button>
+          </div>
+        </div>
+        <div class="card" style="max-width:720px;margin-top:14px">
+          <h3 style="margin:0 0 10px">最近の学習</h3>
+          <div id="recentLogs" class="list"><p class="hint">読み込み中...</p></div>
+        </div>
       </section>
     </section>
   </div>
@@ -92,6 +105,8 @@ const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getFirestore(app);
 const PROFILE_KEY="studynext_profile_v3";
+const SITE_BASE_URL="https://kougame55.github.io/studynext-gitonly-hub/";
+const TEACHER_URL="https://kougame55.github.io/studynext-gitonly-hub/teacher.html";
 const DEFAULT_APPS=[
   {id:"speed",title:"SPEED算数",description:"レース形式で計算力を伸ばす学習アプリ。",url:"apps/speed.html",icon:"🏎️",source:"system"},
   {id:"kanji",title:"漢字スプリント",description:"漢字の読みをテンポよく選ぶ短時間ドリル。",url:"apps/kanji.html",icon:"漢",source:"system"},
@@ -105,6 +120,7 @@ let accountType="personal";
 let profile=null;
 let unsubscribeMessages=null;
 let unsubscribePrints=null;
+let unsubscribeRecentLogs=null;
 let currentSession=null;
 const $=id=>document.getElementById(id);
 
@@ -115,6 +131,9 @@ function randomPart(len){const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let out=
 function saveProfile(next){profile=next;localStorage.setItem(PROFILE_KEY,JSON.stringify(next));localStorage.setItem("studynext_active_user_v1",JSON.stringify({email:next.email||next.studentId,loginAt:new Date().toISOString()}))}
 function loadProfile(){try{return JSON.parse(localStorage.getItem(PROFILE_KEY)||"null")}catch{return null}}
 function applyUserSettings(){const settings=profile?.settings||{};document.body.classList.toggle("theme-contrast",settings.theme==="contrast")}
+function resolveAppUrl(url){try{return new URL(url||"",SITE_BASE_URL).href}catch{return url||""}}
+function withCacheBuster(url){return url+(url.includes("?")?"&":"?")+"v="+Date.now()}
+async function copyText(text){try{await navigator.clipboard.writeText(text);toast("コピーしました")}catch{toast("コピーできない場合は、入力欄を選択してコピーしてください")}}
 function setMode(next){mode=next;$("loginTab").classList.toggle("active",next==="login");$("registerTab").classList.toggle("active",next==="register");$("emailSubmit").textContent=next==="login"?"ログイン":"新規登録";setMessage("")}
 function setAccountType(next){accountType=next;$("personalSeg").classList.toggle("active",next==="personal");$("schoolSeg").classList.toggle("active",next==="school");$("personalForm").classList.toggle("hide",next!=="personal");$("schoolForm").classList.toggle("hide",next!=="school");setMessage("")}
 
@@ -209,6 +228,7 @@ function openPortal(){
   renderApps();
   listenMessages();
   listenPrints();
+  listenRecentLogs();
 }
 async function renderApps(){
   const grid=$("appGrid");
@@ -228,10 +248,11 @@ async function renderApps(){
   });
 }
 function openApp(appInfo){
-  currentSession={appId:appInfo.id||"custom",appTitle:appInfo.title||"アプリ",startedAt:new Date(),url:appInfo.url};
+  const appUrl=resolveAppUrl(appInfo.url||appInfo.src);
+  currentSession={appId:appInfo.id||"custom",appTitle:appInfo.title||"アプリ",startedAt:new Date(),url:appUrl};
   $("runnerTitle").textContent=currentSession.appTitle;
   $("runner").style.display="block";
-  $("appFrame").src=appInfo.url+(appInfo.url.includes("?")?"&":"?")+"v="+Date.now();
+  $("appFrame").src=withCacheBuster(appUrl);
 }
 async function closeApp(){
   const session=currentSession;
@@ -265,6 +286,15 @@ function listenPrints(){
     if(!items.length){$("printsList").innerHTML='<div class="card">まだプリントはありません。</div>';return}
     items.forEach(renderPrint);
   },error=>{$("printsList").innerHTML='<div class="card">プリント取得エラー: '+escapeHtml(firebaseError(error))+"</div>"});
+}
+function listenRecentLogs(){
+  if(unsubscribeRecentLogs)unsubscribeRecentLogs();
+  if(!profile?.uid){$("recentLogs").innerHTML='<p class="hint">ログイン後に学習履歴が表示されます。</p>';return}
+  unsubscribeRecentLogs=onSnapshot(query(collection(db,"usageLogs"),where("uid","==",profile.uid)),snap=>{
+    const items=[];snap.forEach(d=>items.push({id:d.id,...d.data()}));
+    items.sort((a,b)=>String(b.endedAt||b.startedAt||b.createdAtText||"").localeCompare(String(a.endedAt||a.startedAt||a.createdAtText||"")));
+    $("recentLogs").innerHTML=items.slice(0,8).map(item=>`<div class="card" style="box-shadow:none"><b>${escapeHtml(item.appTitle||item.appId||"アプリ")}</b><p class="hint" style="text-align:left;margin:.4rem 0 0">${escapeHtml(formatDate(item.startedAt||item.createdAtText))} / ${Math.max(1,Math.round((Number(item.durationSec)||0)/60))}分</p></div>`).join("")||'<p class="hint">まだ学習履歴がありません。</p>';
+  },error=>{$("recentLogs").innerHTML='<p class="hint">学習履歴取得エラー: '+escapeHtml(firebaseError(error))+"</p>"});
 }
 function renderPrint(item){
   const card=document.createElement("article");
@@ -328,6 +358,7 @@ function showTab(tab){
   $("pageTitle").textContent=meta[tab][0];
   $("pageLead").textContent=meta[tab][1];
 }
+function formatDate(value){if(!value)return "";const date=typeof value==="string"?new Date(value):value;return Number.isNaN(date.getTime())?String(value):date.toLocaleString("ja-JP",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"})}
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[ch]))}
 function escapeAttr(value){return escapeHtml(value).replace(/"/g,"&quot;")}
 
@@ -354,6 +385,8 @@ $("settingsForm").onsubmit=async event=>{
   if(profile.uid)await setDoc(doc(db,"users",profile.uid),{displayName:profile.displayName||"",settings,updatedAt:serverTimestamp()},{merge:true}).catch(()=>{});
   toast("設定を保存しました");
 };
+$("copyStudentUrlBtn").onclick=()=>copyText(SITE_BASE_URL);
+$("copyStudentIframeBtn").onclick=()=>copyText(`<iframe src="${SITE_BASE_URL}" style="width:100%;height:760px;border:0;border-radius:12px" loading="lazy" allow="fullscreen; clipboard-write"></iframe>`);
 $("closeRunner").onclick=()=>closeApp();
 $("reloadRunner").onclick=()=>currentSession&&openApp({id:currentSession.appId,title:currentSession.appTitle,url:currentSession.url});
 window.addEventListener("message",event=>{if(event.data?.type==="studynext:back")closeApp();if(event.data?.type==="studynext:usage"&&currentSession){currentSession.logged=true;writeUsage(currentSession,event.data.payload||{})}});
