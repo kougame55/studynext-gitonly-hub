@@ -1,28 +1,40 @@
-﻿# StudyNext Hub External Login
+# StudyNext Firebase Hub
 
-Cloudflareなし / GASなし / Google Sites埋め込み用のStudyNext Hubです。
+Google Sites に URL 埋め込みできる、Firebase Auth + Firestore 版の StudyNext Hub です。
 
-## 公開URL
+## Files
 
-- https://kougame55.github.io/studynext-gitonly-hub/
+- `index.html` / `google-sites-embed.html`: 児童用ポータル
+- `teacher.html`: 先生用ポータル
+- `apps/speed.html`: SPEED算数
+- `firestore.rules`: Firestore セキュリティルール雛形
 
-## 外部ログインAPI
+## Firebase Data
 
-- API: https://fd1ccc4ce44a2f.lhr.life
-- GitHub private DB: kougame55/studynext-private-db / studynext-users.json
-- GitHubトークンはブラウザへ出さず、このPCのNode APIだけが使用します。
+- `users`: 個人/先生/学校アカウントのプロフィール
+- `classes`: 先生が作成したクラス
+- `invites`: 招待コード
+- `classes/{classId}/students`: 招待コードから参加した児童
+- `usageLogs`: どの児童が、どのアプリを、いつ、何分使ったか
+- `messages`: 先生から児童への連絡とアンケート
+- `replies`: 児童からの返信
+- `surveyResponses`: アンケート回答
+- `apps`: 先生が追加したアプリ
 
-## デスクトップの操作ファイル
+## Current Firebase Check
 
-- `StudyNext_GoogleSites_貼り付け_外部ログイン版.html` をGoogle Sitesへ貼り付け
-- `StudyNext_外部ログインAPI_起動.cmd` でAPIとトンネルを起動
-- `StudyNext_外部ログインAPI_停止.cmd` で停止
-- `StudyNext_GitOnly_更新.cmd` でGitHub Pagesを更新
+Firebase SDK `12.14.0` は読み込み確認済みです。
+ただし、このプロジェクトは現時点で Firebase Authentication が未初期化のため、メール/匿名ログインは `auth/configuration-not-found` になります。
 
-## アプリ追加
+Firebase Console で以下を有効化すると、HTML側のログインが動きます。
 
-1. `apps/*.html` を追加
-2. `apps.json` に登録
-3. `StudyNext_GitOnly_更新.cmd` を実行
+- Authentication: Email/Password
+- Authentication: Google
+- Authentication: Anonymous
+- Firestore Database
+
+## Google Sites
+
+公開 URL を Google Sites の「埋め込み > URL」に入れて使います。
 
 SPEED算数は、点対称などの「はい/いいえ」問題でキーパッドが出ないように、答えが純粋な数字のときだけ入力式へ切り替えます。
