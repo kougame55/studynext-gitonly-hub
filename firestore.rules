@@ -61,5 +61,15 @@ service cloud.firestore {
       allow read: if isTeacher();
       allow create: if signedIn();
     }
+
+    match /printAssignments/{assignmentId} {
+      allow read: if signedIn();
+      allow create, update, delete: if isTeacher() && request.resource.data.teacherUid == request.auth.uid;
+    }
+
+    match /printSubmissions/{submissionId} {
+      allow read: if isTeacher();
+      allow create, update: if signedIn();
+    }
   }
 }
