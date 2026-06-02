@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>StudyNext Firebase Auth Check</title>
+<style>
+:root{--bg:#f6f9ff;--ink:#142033;--muted:#65758d;--panel:#fff;--line:#d9e5f6;--accent:#1769ff;--bad:#d9365f;--ok:#0f9f6e;--warn:#d98900;--shadow:0 18px 54px rgba(38,74,130,.16);--radius:12px}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(135deg,#f7fbff,#eaf4ff);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI","Noto Sans JP",sans-serif}.wrap{width:min(860px,100%);margin:auto;padding:24px}.card{background:white;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}h1{font-size:clamp(2rem,6vw,3.5rem);line-height:1;margin:0 0 12px}.muted{color:var(--muted);line-height:1.7}.status{margin-top:16px;border-radius:12px;padding:14px;font-weight:950}.ok{background:#effaf5;color:var(--ok)}.bad{background:#fff2f5;color:var(--bad)}.warn{background:#fff8e8;color:var(--warn)}button,a{display:inline-flex;margin-top:12px;border:0;border-radius:10px;background:linear-gradient(135deg,var(--accent),#00a7c8);color:#fff;font-weight:950;text-decoration:none;padding:12px 14px;cursor:pointer}.steps{display:grid;gap:9px;margin-top:14px}.steps div{border:1px solid var(--line);border-radius:10px;background:#f8fbff;padding:10px}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <section class="card">
+    <h1>Firebase Auth 診断</h1>
+    <p class="muted">`auth/configuration-not-found` が出る時は、Firebase ConsoleでAuthenticationがまだ開始されていない状態です。このページで匿名ログインの初期化状態を確認できます。</p>
+    <button id="checkBtn" type="button">Auth状態をチェック</button>
+    <a href="https://console.firebase.google.com/project/studynext-14fab/authentication/providers?hl=ja" target="_blank" rel="noopener">Firebase Authentication設定を開く</a>
+    <div id="status" class="status warn">まだチェックしていません。</div>
+    <div class="steps">
+      <div>1. Firebase Consoleで `Authentication` を開く</div>
+      <div>2. `始める` を押す</div>
+      <div>3. `メール/パスワード` を有効化</div>
+      <div>4. `匿名` を有効化（学校招待コード用）</div>
+      <div>5. `Google` を有効化（個人Googleログイン用）</div>
+      <div>6. Authorized domains に `kougame55.github.io` を追加</div>
+    </div>
+  </section>
+</main>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+import { getAuth, signInAnonymously, signOut } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+const firebaseConfig={apiKey:"AIzaSyCj_N-tjM2neCfiNyQljKcPsg-JOKggBt8",authDomain:"studynext-14fab.firebaseapp.com",projectId:"studynext-14fab",storageBucket:"studynext-14fab.firebasestorage.app",messagingSenderId:"518208905501",appId:"1:518208905501:web:0f0be33ae5009a11ab81f4",measurementId:"G-9ES3W12YL5"};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const status=document.getElementById("status");
+function show(kind,text){status.className="status "+kind;status.textContent=text}
+document.getElementById("checkBtn").onclick=async()=>{
+  show("warn","チェック中...");
+  try{
+    const cred=await signInAnonymously(auth);
+    await signOut(auth);
+    show("ok","OK: Firebase Authenticationは開始済みで、匿名ログインも有効です。学校アカウントログインが動きます。");
+  }catch(error){
+    const code=String(error?.code||error?.message||"");
+    if(code.includes("configuration-not-found"))show("bad","NG: Authenticationがまだ開始されていません。Firebase Consoleで `Authentication → 始める` を押してください。");
+    else if(code.includes("operation-not-allowed"))show("bad","NG: Authenticationは開始済みですが、匿名ログインが無効です。Sign-in methodで `匿名` を有効にしてください。");
+    else show("bad","NG: "+code);
+  }
+};
+</script>
+</body>
+</html>
