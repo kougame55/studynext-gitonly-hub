@@ -265,7 +265,7 @@ async function writeUsage(session, extra={}){
   if(!profile||!session.startedAt)return;
   const endedAt=new Date();
   const durationSec=Math.max(1,Math.round((endedAt-session.startedAt)/1000));
-  await addDoc(collection(db,"usageLogs"),{uid:profile.uid||"",studentId:profile.studentId||"",realName:profile.realName||profile.displayName||profile.email||"",classId:profile.classId||"",teacherUid:profile.teacherUid||"",appId:session.appId,appTitle:session.appTitle,startedAt:session.startedAt.toISOString(),endedAt:endedAt.toISOString(),durationSec,dateKey:endedAt.toISOString().slice(0,10),createdAt:serverTimestamp(),...extra});
+  await addDoc(collection(db,"usageLogs"),{...extra,uid:profile.uid||"",studentId:profile.studentId||"",realName:profile.realName||profile.displayName||profile.email||"",classId:profile.classId||"",teacherUid:profile.teacherUid||"",appId:session.appId,appTitle:session.appTitle,startedAt:session.startedAt.toISOString(),endedAt:endedAt.toISOString(),durationSec,dateKey:endedAt.toISOString().slice(0,10),createdAt:serverTimestamp()});
 }
 function listenMessages(){
   if(unsubscribeMessages)unsubscribeMessages();
