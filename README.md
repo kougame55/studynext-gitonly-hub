@@ -8,7 +8,7 @@ Cloudflareなし / GASなし / Google Sites埋め込み用のStudyNext Hubです
 
 ## 外部ログインAPI
 
-- API: https://066d0cc8fddf1a.lhr.life
+- API: https://fd1ccc4ce44a2f.lhr.life
 - GitHub private DB: kougame55/studynext-private-db / studynext-users.json
 - GitHubトークンはブラウザへ出さず、このPCのNode APIだけが使用します。
 
