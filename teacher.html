@@ -35,6 +35,7 @@
       <nav class="nav">
         <button id="dashboardTab" class="active" type="button">ダッシュボード</button>
         <button id="messagesTab" type="button">連絡・アンケート</button>
+        <button id="printsTab" type="button">デジタルプリント</button>
         <button id="appsTab" type="button">アプリ一覧登録</button>
       </nav>
       <div class="sideBottom"><b id="teacherLabel">先生</b><br><span id="classLabel">クラス未選択</span><br><button id="logoutBtn" class="danger" style="width:100%;margin-top:10px" type="button">ログアウト</button></div>
@@ -72,6 +73,19 @@
           <div class="card"><h3>返信・アンケート回答</h3><div id="responsesList" class="list"></div></div>
         </div>
         <div class="card" style="margin-top:14px"><h3>送信済み連絡</h3><div id="sentMessages" class="list"></div></div>
+      </section>
+      <section id="printsPanel" class="hide">
+        <div class="two">
+          <form id="printForm" class="card form">
+            <h3 style="margin:0">デジタルプリントを配る</h3>
+            <label class="field">タイトル<input id="printTitle" placeholder="算数プリント 速さ"></label>
+            <label class="field">説明<textarea id="printBody" placeholder="今日の授業で使うプリントです。"></textarea></label>
+            <label class="field">問題（1行1問）<textarea id="printQuestions" placeholder="時速60kmで2時間進むと何kmですか。&#10;式も書きましょう。"></textarea></label>
+            <button class="primary" type="submit">配信する</button>
+          </form>
+          <div class="card"><h3>提出状況</h3><div id="printSubmissions" class="list"></div></div>
+        </div>
+        <div class="card" style="margin-top:14px"><h3>配信済みプリント</h3><div id="printAssignments" class="list"></div></div>
       </section>
       <section id="appsPanel" class="hide">
         <div class="two">
@@ -184,6 +198,8 @@ function listenClassData(){
   unsubscribers.push(onSnapshot(query(collection(db,"apps"),where("classId","==",classId)),snap=>{const apps=[];snap.forEach(d=>apps.push({id:d.id,...d.data()}));renderApps(apps)}));
   unsubscribers.push(onSnapshot(query(collection(db,"replies"),where("classId","==",classId)),snap=>{const replies=[];snap.forEach(d=>replies.push({id:d.id,type:"返信",...d.data()}));renderResponses(replies)}));
   unsubscribers.push(onSnapshot(query(collection(db,"surveyResponses"),where("classId","==",classId)),snap=>{const responses=[];snap.forEach(d=>responses.push({id:d.id,type:"アンケート",...d.data()}));renderResponses(null,responses)}));
+  unsubscribers.push(onSnapshot(query(collection(db,"printAssignments"),where("classId","==",classId)),snap=>{const assignments=[];snap.forEach(d=>assignments.push({id:d.id,...d.data()}));assignments.sort((a,b)=>String(b.createdAtText).localeCompare(String(a.createdAtText)));renderPrintAssignments(assignments)}));
+  unsubscribers.push(onSnapshot(query(collection(db,"printSubmissions"),where("classId","==",classId)),snap=>{const submissions=[];snap.forEach(d=>submissions.push({id:d.id,...d.data()}));submissions.sort((a,b)=>String(b.submittedAtText||"").localeCompare(String(a.submittedAtText||"")));renderPrintSubmissions(submissions)}));
 }
 function renderDashboard(){
   const totalSec=logs.reduce((sum,l)=>sum+(Number(l.durationSec)||0),0);
@@ -213,6 +229,12 @@ function renderResponses(replies, surveys){
 }
 function renderApps(apps){
   $("appsList").innerHTML=apps.length?apps.map(a=>`<div class="card"><b>${escapeHtml(a.icon||"📘")} ${escapeHtml(a.title)}</b><p class="hint">${escapeHtml(a.description||a.url)}</p><span class="pill">${escapeHtml(a.url)}</span></div>`).join(""):'<p class="hint">追加アプリはまだありません。</p>';
+}
+function renderPrintAssignments(assignments){
+  $("printAssignments").innerHTML=assignments.length?assignments.map(a=>`<div class="card"><b>${escapeHtml(a.title||"デジタルプリント")}</b><p class="hint">${escapeHtml(a.body||"")}</p><span class="pill">${(a.questions||[]).length}問 / ${escapeHtml(a.createdAtText||"")}</span></div>`).join(""):'<p class="hint">まだプリントを配信していません。</p>';
+}
+function renderPrintSubmissions(submissions){
+  $("printSubmissions").innerHTML=submissions.length?submissions.slice(0,30).map(s=>{const answers=s.answers||{};const body=Object.entries(answers).map(([q,a])=>`<p class="hint"><b>${escapeHtml(q)}</b><br>${escapeHtml(a||"未記入")}</p>`).join("");return `<div class="card"><b>${escapeHtml(s.realName||s.studentId||"児童")}</b><span class="pill">${escapeHtml(s.submittedAtText||"")}</span>${body}</div>`}).join(""):'<p class="hint">提出はまだありません。</p>';
 }
 function openClassModal(){$("classModal").classList.remove("hide");$("classTeacherName").value=profile.displayName||""}
 function closeClassModal(){$("classModal").classList.add("hide")}
@@ -256,8 +278,19 @@ async function addApp(event){
   await addDoc(collection(db,"apps"),{classId:activeClass.id,teacherUid:profile.uid,title,url,description:$("appDescription").value.trim(),icon:$("appIcon").value.trim()||"📘",createdAt:serverTimestamp(),createdAtText:new Date().toLocaleString("ja-JP")});
   event.target.reset();toast("アプリを登録しました");
 }
+async function sendPrint(event){
+  event.preventDefault();
+  if(!activeClass){toast("クラスを作成してください");return}
+  const title=$("printTitle").value.trim();
+  const body=$("printBody").value.trim();
+  const questions=$("printQuestions").value.split(/\r?\n/).map(v=>v.trim()).filter(Boolean);
+  if(!title||!questions.length){toast("タイトルと問題を入力してください");return}
+  await addDoc(collection(db,"printAssignments"),{classId:activeClass.id,teacherUid:profile.uid,title,body,questions,createdAt:serverTimestamp(),createdAtText:new Date().toLocaleString("ja-JP")});
+  event.target.reset();
+  toast("プリントを配信しました");
+}
 function showPanel(name){
-  const map={dashboard:["ダッシュボード","児童の学習時間とアプリ利用を確認します。"],messages:["連絡・アンケート","児童portalへ連絡を送り、返信と回答を確認します。"],apps:["アプリ一覧登録","児童portalに表示する外部サイトや教材を追加します。"]};
+  const map={dashboard:["ダッシュボード","児童の学習時間とアプリ利用を確認します。"],messages:["連絡・アンケート","児童portalへ連絡を送り、返信と回答を確認します。"],prints:["デジタルプリント","先生が課題を配り、児童はそこに記入して提出します。"],apps:["アプリ一覧登録","児童portalに表示する外部サイトや教材を追加します。"]};
   for(const key of Object.keys(map)){
     $(key+"Tab").classList.toggle("active",key===name);
     $(key+"Panel").classList.toggle("hide",key!==name);
@@ -281,8 +314,10 @@ $("classForm").onsubmit=createClass;
 $("messageForm").onsubmit=sendMessage;
 $("withSurvey").onchange=event=>$("surveyField").classList.toggle("hide",!event.target.checked);
 $("appForm").onsubmit=addApp;
+$("printForm").onsubmit=sendPrint;
 $("dashboardTab").onclick=()=>showPanel("dashboard");
 $("messagesTab").onclick=()=>showPanel("messages");
+$("printsTab").onclick=()=>showPanel("prints");
 $("appsTab").onclick=()=>showPanel("apps");
 onAuthStateChanged(auth,async user=>{if(!user)return;const snap=await getDoc(doc(db,"users",user.uid)).catch(()=>null);if(snap?.exists()&&snap.data().role==="teacher"){profile={uid:user.uid,...snap.data()};openPortal()}});
 </script>
