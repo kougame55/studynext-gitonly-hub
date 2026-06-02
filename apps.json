@@ -1,8 +1,38 @@
-﻿[
+[
   {
     "id": "speed",
     "title": "SPEED算数",
     "description": "レース形式の計算チャレンジ。Firebase利用ログ連携・点対称問題の入力矛盾修正済み。",
     "src": "apps/speed.html"
+  },
+  {
+    "id": "kanji",
+    "title": "漢字スプリント",
+    "description": "漢字の読みをテンポよく選ぶ短時間ドリル。",
+    "src": "apps/kanji.html"
+  },
+  {
+    "id": "english",
+    "title": "英単語リンク",
+    "description": "英単語と日本語の意味をすばやく結びます。",
+    "src": "apps/english.html"
+  },
+  {
+    "id": "science",
+    "title": "理科クイズラボ",
+    "description": "身近な理科の要点をクイズで確認します。",
+    "src": "apps/science.html"
+  },
+  {
+    "id": "social",
+    "title": "社会タイムライン",
+    "description": "地理・歴史・公民の基本をチェックします。",
+    "src": "apps/social.html"
+  },
+  {
+    "id": "typing",
+    "title": "タイピング道場",
+    "description": "学習文を入力して正確さを伸ばします。",
+    "src": "apps/typing.html"
   }
 ]
