@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPEED算数</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0d1a;--track:#1a1a30;--neon-y:#f5e642;--neon-r:#ff3860;
+  --neon-b:#00d4ff;--neon-g:#39ff14;--panel:#0f1628;--text:#eee;
+  --fd:'Orbitron',monospace;--fb:'Zen Kaku Gothic New',sans-serif;
+}
+body.theme-light{--bg:#f7fafc;--track:#dbeafe;--neon-y:#2563eb;--neon-r:#dc2626;--neon-b:#0284c7;--neon-g:#16a34a;--panel:#fff;--text:#111827}
+body.theme-black{--bg:#000;--track:#080808;--neon-y:#fff;--neon-r:#ff2d55;--neon-b:#38bdf8;--neon-g:#22c55e;--panel:#050505;--text:#f8fafc}
+body.theme-cyber{--bg:#020617;--track:#0f172a;--neon-y:#06b6d4;--neon-r:#ec4899;--neon-b:#3b82f6;--neon-g:#10b981;--panel:#020617}
+body.theme-sunset{--bg:#2e1026;--track:#1c0717;--neon-y:#f59e0b;--neon-r:#ef4444;--neon-b:#8b5cf6;--neon-g:#84cc16;--panel:#2e1026}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var(--fb);overflow-x:hidden}
+button,input,select{font-family:inherit}
+.screen{display:none;min-height:100vh;flex-direction:column}
+.screen.active{display:flex}
+#screen-auth,#screen-start{background:linear-gradient(160deg,var(--bg),var(--track) 58%,var(--panel));align-items:center;justify-content:center;position:relative;overflow:hidden;padding:1.5rem}
+.road-bg{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(90deg,transparent 0,transparent 49%,rgba(255,255,255,.04) 49%,rgba(255,255,255,.04) 51%),repeating-linear-gradient(0deg,transparent 0,transparent 59px,rgba(255,255,255,.04) 59px,rgba(255,255,255,.04) 61px);animation:roadMove 2s linear infinite}
+@keyframes roadMove{from{background-position:0 0}to{background-position:0 60px}}
+.stars{position:absolute;inset:0;pointer-events:none;background:radial-gradient(1px 1px at 15% 25%,rgba(255,255,255,.55) 0%,transparent 100%),radial-gradient(1px 1px at 40% 70%,rgba(255,255,255,.35) 0%,transparent 100%),radial-gradient(1px 1px at 65% 15%,rgba(255,255,255,.45) 0%,transparent 100%),radial-gradient(1px 1px at 80% 55%,rgba(255,255,255,.3) 0%,transparent 100%)}
+.auth-box,.start-inner{position:relative;z-index:2;text-align:center;width:100%;max-width:460px}
+.auth-box{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:1.4rem;box-shadow:0 20px 70px rgba(0,0,0,.35)}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-bottom:1rem}
+.tabs button,.btn-secondary,.btn-primary,.chip,.level-card,.back-btn,.panel-close{cursor:pointer}
+.tabs button{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:var(--text);padding:.8rem;border-radius:8px;font-weight:800}
+.tabs button.active{background:var(--neon-y);color:var(--bg);border-color:var(--neon-y)}
+.auth-form{display:grid;gap:.75rem;text-align:left}
+.auth-form label{display:grid;gap:.35rem;color:rgba(255,255,255,.72);font-size:.86rem}
+body.theme-light .auth-form label{color:#475569}
+.auth-form input,.setting-row input,.setting-row select{width:100%;padding:.75rem .9rem;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.2);border-radius:8px;color:var(--text);font-size:1rem}
+body.theme-light .auth-form input,body.theme-light .setting-row input,body.theme-light .setting-row select{background:#fff;color:#111827;border-color:#cbd5e1}
+.msg{min-height:1.4em;margin-top:.7rem;color:var(--neon-r);font-weight:700}
+.game-logo{font-family:var(--fd);font-size:clamp(2.4rem,9vw,4rem);font-weight:900;letter-spacing:.05em;line-height:1.1;color:var(--neon-y);text-shadow:0 0 30px var(--neon-y);margin-bottom:.3rem;animation:logoPulse 3s ease-in-out infinite}
+@keyframes logoPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.25)}}
+.game-subtitle{font-size:.9rem;color:rgba(255,255,255,.6);letter-spacing:.18em;margin-bottom:1.2rem}
+body.theme-light .game-subtitle{color:#475569}
+.player-title-display{margin-bottom:1.2rem;font-size:1rem;font-weight:700;line-height:1.5;background:rgba(255,255,255,.06);padding:.8rem;border-radius:10px;border:1px solid rgba(255,255,255,.12)}
+.car-display{font-size:4.5rem;margin-bottom:1rem;display:block;animation:carBounce 1.6s ease-in-out infinite;transform:scaleX(-1)}
+@keyframes carBounce{0%,100%{translate:0 0}50%{translate:0 -10px}}
+.start-btn-group{display:flex;flex-direction:column;gap:.8rem}
+.btn-primary{font-family:var(--fd);font-size:1rem;font-weight:800;letter-spacing:.08em;padding:1rem 1.2rem;border:2px solid var(--neon-y);background:var(--neon-y);color:var(--bg);border-radius:8px;transition:.15s}
+.btn-primary:hover,.btn-secondary:hover,.level-card:hover{transform:translateY(-2px)}
+.btn-secondary{font-family:var(--fd);font-size:.86rem;font-weight:800;letter-spacing:.06em;padding:.82rem 1rem;border:1.5px solid var(--neon-y);background:transparent;color:var(--neon-y);border-radius:8px;transition:.15s;text-decoration:none;text-align:center}
+.panel-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.78);align-items:center;justify-content:center;padding:1rem}
+.panel-overlay.active{display:flex}
+.panel-box{background:var(--panel);border:1.5px solid var(--neon-y);border-radius:14px;padding:1.3rem;max-width:540px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.panel-title{font-family:var(--fd);font-size:1.05rem;color:var(--neon-y);margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:.7rem}
+.panel-close{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:var(--text);font-size:1rem;padding:.25rem .5rem;border-radius:6px}
+.rule-item{margin-bottom:.8rem;padding:.75rem;background:rgba(255,255,255,.04);border-radius:8px;border-left:3px solid var(--neon-y)}
+.rule-item h3{color:var(--neon-y);font-size:.84rem;margin-bottom:.25rem}.rule-item p{font-size:.85rem;line-height:1.6;color:rgba(255,255,255,.76)}
+body.theme-light .rule-item p{color:#475569}
+.setting-row{margin-bottom:1rem}.setting-row label{display:block;font-size:.82rem;color:rgba(255,255,255,.58);margin-bottom:.35rem}.setting-divider{border:none;border-top:1px solid rgba(255,255,255,.12);margin:1rem 0}.btn-row{display:flex;gap:.5rem}.btn-row .btn-secondary{flex:1;font-size:.74rem;padding:.68rem .45rem}
+#screen-select{background:var(--bg);padding:1.25rem 1rem 1.5rem;align-items:center}
+.select-topbar{width:100%;max-width:680px;display:flex;align-items:center;gap:.75rem;margin-bottom:1.1rem}
+.back-btn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:7px;color:var(--text);font-size:1rem;padding:.45rem .75rem}
+.select-header{font-family:var(--fd);font-size:1rem;color:var(--neon-y);letter-spacing:.06em}.select-section{width:100%;max-width:680px;margin-bottom:1rem}.select-section h3{font-size:.72rem;color:rgba(255,255,255,.5);letter-spacing:.15em;margin-bottom:.55rem;font-family:var(--fd)}
+body.theme-light .select-section h3{color:#64748b}
+.chip-group{display:flex;flex-wrap:wrap;gap:.45rem}.chip{padding:.42rem .85rem;border:1.5px solid rgba(255,255,255,.16);border-radius:999px;background:transparent;color:var(--text);font-size:.83rem;white-space:nowrap}.chip.selected{background:var(--neon-y);border-color:var(--neon-y);color:var(--bg);font-weight:800}
+.unit-scroll{max-height:180px;overflow-y:auto;padding-right:4px}.level-group{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem}.level-card{padding:.65rem .3rem;text-align:center;border:2px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.04);transition:.15s}.level-card.selected{border-color:var(--neon-y);background:rgba(255,255,255,.12)}.level-icon{font-size:1.45rem;display:block}.level-name{font-family:var(--fd);font-size:.65rem;color:var(--neon-y)}.level-desc{font-size:.62rem;color:rgba(255,255,255,.55);margin-top:.2rem}
+body.theme-light .level-desc{color:#64748b}.select-footer{width:100%;max-width:680px;display:flex;flex-direction:column;align-items:center;gap:.5rem}.best-score-display{font-size:.82rem;color:var(--neon-y);min-height:1.2em}.select-start-btn{width:100%;max-width:360px}
+#screen-game{background:var(--bg)}.hud{display:flex;align-items:center;justify-content:space-between;padding:.65rem 1.25rem;background:rgba(0,0,0,.42);border-bottom:1px solid rgba(255,255,255,.1);flex-shrink:0}.hud-timer{font-family:var(--fd);font-size:2rem;font-weight:900;color:var(--neon-y);min-width:90px;text-align:center}.hud-timer.danger{color:var(--neon-r);animation:timerPulse .45s infinite}@keyframes timerPulse{50%{opacity:.45}}.hud-center{text-align:center}.hud-score-num{font-family:var(--fd);font-size:1.6rem}.hud-score-label{font-size:.65rem;color:rgba(255,255,255,.45)}.hud-right{display:flex;flex-direction:column;align-items:flex-end;min-width:75px}.hud-streak-num{font-family:var(--fd);font-size:.88rem;color:var(--neon-g)}.time-bar-wrap{height:5px;background:rgba(255,255,255,.08)}.time-bar{height:100%;background:linear-gradient(90deg,var(--neon-g),var(--neon-y),var(--neon-r));transition:width .15s linear}.time-bar.danger{background:var(--neon-r)}
+.race-section{height:130px;position:relative;background:var(--bg);overflow:hidden;border-bottom:1px solid rgba(255,255,255,.08)}.track-shoulder-top,.track-shoulder-bottom{position:absolute;left:0;right:0;height:20px;background:rgba(0,0,0,.45)}.track-shoulder-top{top:0}.track-shoulder-bottom{bottom:0}.track-edge-top,.track-edge-bottom{position:absolute;left:0;right:0;height:10px;background:repeating-linear-gradient(90deg,#cc1111 0,#cc1111 18px,#eee 18px,#eee 36px);z-index:3}.track-edge-top{top:20px}.track-edge-bottom{bottom:20px}.track-surface{position:absolute;top:30px;bottom:30px;left:0;right:0;background:var(--track)}.track-center-line{position:absolute;left:0;right:0;top:50%;height:3px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.55) 0,rgba(255,255,255,.55) 28px,transparent 28px,transparent 56px);animation:lineScroll .35s linear infinite}@keyframes lineScroll{to{background-position:-56px 0}}
+.car-container{position:absolute;top:30px;bottom:30px;left:0;right:0;z-index:2}.race-car{position:absolute;line-height:1;transition:left .55s cubic-bezier(.25,.46,.45,.94);white-space:nowrap}.player-car{font-size:2.3rem;z-index:5;top:50%;transform:translateY(-50%) scaleX(-1);filter:drop-shadow(0 0 10px rgba(255,255,255,.5))}.ghost-car{font-size:1.5rem;opacity:.76;z-index:2;transform:scaleX(-1)}.ghost-label{position:absolute;font-size:.5rem;color:rgba(255,255,255,.75);white-space:nowrap;bottom:calc(100% + 1px);left:50%;transform:translateX(-50%) scaleX(-1);font-family:var(--fd);background:rgba(0,0,0,.65);padding:1px 4px;border-radius:2px}.rank-display{position:absolute;right:.9rem;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.75);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:.3rem .7rem;text-align:center;z-index:10}.rank-num{font-family:var(--fd);font-size:1.4rem;color:var(--neon-y)}.rank-label{font-size:.58rem;color:rgba(255,255,255,.52)}
+.question-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.2rem;position:relative;overflow:hidden}.game-mode-tag{font-size:.7rem;letter-spacing:.1em;color:rgba(255,255,255,.5);text-align:center;margin-bottom:.2rem}.question-context{font-size:.86rem;color:rgba(255,255,255,.58);margin-bottom:.35rem;min-height:1.3em;text-align:center}.question-text{font-size:clamp(1.8rem,7vw,3.4rem);font-weight:900;text-align:center;margin-bottom:1.2rem;min-height:4.3rem;display:flex;align-items:center;justify-content:center;line-height:1.3}.choices-grid{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;width:100%;max-width:460px}.choice-btn{padding:1rem .5rem;font-family:var(--fd);font-size:1.15rem;font-weight:800;background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.13);border-radius:8px;color:var(--text);cursor:pointer;transition:.1s}.choice-btn:hover{border-color:var(--neon-y);transform:scale(1.02)}.choice-btn.correct{background:rgba(57,255,20,.16);border-color:var(--neon-g);color:var(--neon-g)}.choice-btn.wrong{background:rgba(255,56,96,.16);border-color:var(--neon-r);color:var(--neon-r);animation:wrongShake .3s}@keyframes wrongShake{20%{transform:translateX(-7px)}60%{transform:translateX(7px)}}
+.free-input-wrap{width:100%;max-width:380px;display:flex;gap:.5rem}.free-input{flex:1;background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.2);border-radius:8px;padding:.85rem 1rem;font-family:var(--fd);font-size:1.8rem;font-weight:800;color:var(--text);text-align:center}.free-input.correct{border-color:var(--neon-g);color:var(--neon-g)}.free-input.wrong{border-color:var(--neon-r);color:var(--neon-r);animation:wrongShake .3s}.num-pad{display:grid;grid-template-columns:repeat(4,1fr);gap:.55rem;width:100%;max-width:400px;margin-top:.8rem}.num-pad button{padding:1rem 0;font-family:var(--fd);font-size:1.25rem;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:8px;color:var(--text);cursor:pointer}.num-pad .btn-del{color:var(--neon-r);border-color:rgba(255,56,96,.35)}.num-pad .btn-ok{grid-column:span 2;border-color:var(--neon-y);color:var(--neon-y);font-weight:800}
+.history-strip{display:flex;gap:4px;justify-content:center;margin-top:.85rem;min-height:14px;flex-wrap:wrap;max-width:340px}.hist-dot{width:13px;height:13px;border-radius:50%}.hist-dot.ok{background:var(--neon-g)}.hist-dot.ng{background:var(--neon-r)}.feedback-toast{position:fixed;top:45%;left:50%;transform:translate(-50%,-50%);font-family:var(--fd);font-size:2rem;font-weight:900;pointer-events:none;opacity:0;z-index:100;white-space:nowrap}.feedback-toast.show{animation:toastPop .75s ease-out forwards}@keyframes toastPop{0%{opacity:1;transform:translate(-50%,-50%) scale(1.4)}100%{opacity:0;transform:translate(-50%,-130%) scale(.7)}}
+#screen-result{background:linear-gradient(160deg,var(--bg),var(--panel));align-items:center;justify-content:center;padding:1.5rem;position:relative;overflow:hidden}.result-inner{position:relative;z-index:2;width:100%;max-width:480px;text-align:center}.result-title{font-family:var(--fd);font-size:.72rem;letter-spacing:.2em;color:rgba(255,255,255,.65);margin-bottom:.5rem}.result-rank-num{font-family:var(--fd);font-size:clamp(3.5rem,14vw,5.5rem);font-weight:900;color:var(--neon-y);line-height:1}.result-medal{font-size:2rem;margin-bottom:.5rem}.result-stats{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:1.2rem 0}.stat-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:.8rem .5rem}.stat-value{font-family:var(--fd);font-size:1.55rem}.stat-label{font-size:.68rem;color:rgba(255,255,255,.5)}.accuracy-bar-wrap{background:rgba(255,255,255,.09);border-radius:3px;height:5px;margin-top:.45rem;overflow:hidden}.accuracy-bar{height:100%;background:var(--neon-g);width:0%;transition:width 1.2s ease .3s}.new-record-badge,.ach-badge{display:inline-block;font-family:var(--fd);font-size:.7rem;background:var(--neon-r);color:#fff;padding:.28rem .75rem;border-radius:999px;margin:.35rem}.ach-badge{background:linear-gradient(45deg,var(--neon-y),#ff8c00);color:#000}.ghost-result-list{margin:0 0 1rem;text-align:left}.ghost-result-row{display:flex;align-items:center;gap:.5rem;padding:.38rem .6rem;border-radius:6px;font-size:.8rem}.ghost-result-row.highlight{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}.gr-rank{font-family:var(--fd);font-size:.72rem;color:rgba(255,255,255,.48);min-width:34px}.gr-name{flex:1}.gr-score{font-family:var(--fd);color:var(--neon-y)}.ghost-result-row.you .gr-name,.ghost-result-row.you .gr-score{color:var(--neon-g);font-weight:800}.result-btns{display:flex;flex-direction:column;gap:.6rem}
+@media(max-width:560px){.level-group{grid-template-columns:1fr}.hud{padding:.55rem .75rem}.hud-timer{font-size:1.55rem;min-width:70px}.question-text{font-size:2rem}.choice-btn{font-size:1rem}.btn-row{flex-direction:column}}
+</style>
+</head>
+<body>
+<div id="screen-auth" class="screen active">
+  <div class="stars"></div><div class="road-bg"></div>
+  <div class="auth-box">
+    <div class="game-logo" style="font-size:2.4rem">SPEED<br>算数</div>
+    <div class="tabs">
+      <button id="auth-tab-login" class="active" type="button" onclick="setAuthMode('login')">ログイン</button>
+      <button id="auth-tab-register" type="button" onclick="setAuthMode('register')">新規登録</button>
+    </div>
+    <form class="auth-form" onsubmit="submitAuth(event)">
+      <label>メールアドレス<input id="auth-email" type="email" autocomplete="email" required></label>
+      <label>パスワード<input id="auth-password" type="password" autocomplete="current-password" minlength="8" required></label>
+      <button class="btn-primary" id="auth-submit" type="submit">ログイン</button>
+    </form>
+    <div class="msg" id="auth-message"></div>
+  </div>
+</div>
+
+<div id="screen-start" class="screen">
+  <div class="stars"></div><div class="road-bg"></div>
+  <div class="start-inner">
+    <span class="car-display">🏎️</span>
+    <div class="game-logo">SPEED<br>算数</div>
+    <div class="game-subtitle">▸ 最速計算チャレンジ ◂</div>
+    <div class="player-title-display" id="start-player-title"></div>
+    <div class="start-btn-group">
+      <button class="btn-primary" onclick="goToSelect()">▶ スタート</button>
+      <button class="btn-secondary" onclick="showPanel('rules')">📋 ルール</button>
+      <button class="btn-secondary" onclick="showPanel('settings')">⚙ 設定</button>
+      <button class="btn-secondary" onclick="logoutStudyNext()">ログアウト</button>
+    </div>
+  </div>
+</div>
+
+<div id="panel-rules" class="panel-overlay">
+  <div class="panel-box">
+    <div class="panel-title">📋 ルール <button class="panel-close" onclick="hidePanel('rules')">✕</button></div>
+    <div class="rule-item"><h3>🎯 目標</h3><p>できるだけ多くの問題に正解して、ゴーストを追い抜こう！</p></div>
+    <div class="rule-item"><h3>⏱ ノーマル</h3><p>制限時間1分。正解で時間追加、不正解は時間減少。</p></div>
+    <div class="rule-item"><h3>💀 サバイバル</h3><p>正解で時間追加。シールドなしのミスは即終了。</p></div>
+    <div class="rule-item"><h3>🎁 アイテム</h3><p>問題に正解すると、タイム回復、ブースト、シールド、フリーズが発動することがあります。</p></div>
+    <button class="btn-primary" style="width:100%;margin-top:1rem" onclick="hidePanel('rules')">わかった！</button>
+  </div>
+</div>
+
+<div id="panel-settings" class="panel-overlay">
+  <div class="panel-box">
+    <div class="panel-title">⚙ 設定 <button class="panel-close" onclick="hidePanel('settings')">✕</button></div>
+    <div class="setting-row"><label>プレイヤー名</label><input type="text" id="input-username" maxlength="12"></div>
+    <div class="setting-row"><label>操作モード</label><select id="select-inputmode"><option value="auto">レベルに合わせる</option><option value="choice">つねに選択肢</option><option value="type">つねに入力</option></select></div>
+    <div class="setting-row"><label>効果音</label><select id="select-sfx"><option value="on">オン</option><option value="off">オフ</option></select></div>
+    <div class="setting-row"><label>問題切り替え速度</label><select id="select-speed"><option value="600">ゆっくり</option><option value="400" selected>ふつう</option><option value="200">はやい</option></select></div>
+    <div class="setting-row"><label>カラーテーマ</label><select id="select-theme"><option value="default">ダーク</option><option value="light">ライト</option><option value="black">ブラック</option><option value="cyber">サイバーブルー</option><option value="sunset">サンセット</option></select></div>
+    <hr class="setting-divider">
+    <div class="btn-row"><button class="btn-secondary" onclick="downloadBackup()">💾 ダウンロード</button><button class="btn-secondary" onclick="document.getElementById('backup-file').click()">📂 読み込み</button></div>
+    <input type="file" id="backup-file" accept=".json" style="display:none" onchange="loadBackup(event)">
+    <hr class="setting-divider">
+    <button class="btn-secondary" style="width:100%;color:var(--neon-r);border-color:rgba(255,56,96,.35)" onclick="resetData()">🗑 スコアリセット</button>
+    <button class="btn-primary" style="width:100%;margin-top:1rem" onclick="saveSettings()">保存して閉じる</button>
+  </div>
+</div>
+
+<div id="screen-select" class="screen">
+  <div class="select-topbar"><button class="back-btn" onclick="showScreen('start')">← 戻る</button><div class="select-header">学年・単元・レベルを選ぼう</div></div>
+  <div class="select-section"><h3>GRADE</h3><div class="chip-group" id="grade-chips"></div></div>
+  <div class="select-section"><h3>UNIT</h3><div class="unit-scroll"><div class="chip-group" id="unit-chips"></div></div></div>
+  <div class="select-section"><h3>MODE</h3><div class="level-group">
+    <div class="level-card selected" id="mode-card-normal" onclick="selectMode('normal')"><span class="level-icon">⏱️</span><div class="level-name">ノーマル</div><div class="level-desc">1分勝負</div></div>
+    <div class="level-card" id="mode-card-survival" onclick="selectMode('survival')"><span class="level-icon">💀</span><div class="level-name">サバイバル</div><div class="level-desc">ミスで終了</div></div>
+    <div class="level-card" id="mode-card-item" onclick="selectMode('item')"><span class="level-icon">🎁</span><div class="level-name">アイテム</div><div class="level-desc">効果発動</div></div>
+  </div></div>
+  <div class="select-section"><h3>LEVEL</h3><div class="level-group">
+    <div class="level-card" data-level="easy" onclick="selectLevel('easy')"><span class="level-icon">🐢</span><div class="level-name">かんたん</div><div class="level-desc">3択</div></div>
+    <div class="level-card selected" data-level="normal" onclick="selectLevel('normal')"><span class="level-icon">🚗</span><div class="level-name">ふつう</div><div class="level-desc">4択</div></div>
+    <div class="level-card" data-level="hard" onclick="selectLevel('hard')"><span class="level-icon">🏎️</span><div class="level-name">むずかしい</div><div class="level-desc">入力中心</div></div>
+  </div></div>
+  <div class="select-footer"><div class="best-score-display" id="best-score-display"></div><button class="btn-primary select-start-btn" onclick="startGame()">🏁 スタート！</button></div>
+</div>
+
+<div id="screen-game" class="screen">
+  <div class="hud"><div class="hud-timer" id="hud-timer">60.0</div><div class="hud-center"><div class="hud-score-num" id="hud-score">0</div><div class="hud-score-label">正解数</div></div><div class="hud-right"><div id="buff-icons" style="font-size:.9rem;height:1.2em;margin-bottom:2px"></div><div><span id="streak-fire">⚡</span><span class="hud-streak-num" id="streak-num">×1</span></div></div></div>
+  <div class="time-bar-wrap"><div class="time-bar" id="time-bar" style="width:100%"></div></div>
+  <div class="race-section" id="race-section"><div class="track-shoulder-top"></div><div class="track-shoulder-bottom"></div><div class="track-edge-top"></div><div class="track-edge-bottom"></div><div class="track-surface"></div><div class="track-center-line"></div><div class="car-container" id="car-container"></div><div class="rank-display"><div class="rank-num" id="race-rank">31</div><div class="rank-label">位</div></div></div>
+  <div class="question-area"><div class="game-mode-tag" id="game-mode-tag"></div><div class="question-context" id="q-context"></div><div class="question-text" id="q-text"></div><div class="choices-grid" id="choices-grid"></div><div class="free-input-wrap" id="free-input-wrap" style="display:none"><input class="free-input" type="text" id="free-input" placeholder="?" autocomplete="off" inputmode="decimal"></div><div class="num-pad" id="num-pad" style="display:none"><button onclick="numPadPress('7')">7</button><button onclick="numPadPress('8')">8</button><button onclick="numPadPress('9')">9</button><button class="btn-del" onclick="numPadPress('del')">⌫</button><button onclick="numPadPress('4')">4</button><button onclick="numPadPress('5')">5</button><button onclick="numPadPress('6')">6</button><button onclick="numPadPress('-')">−</button><button onclick="numPadPress('1')">1</button><button onclick="numPadPress('2')">2</button><button onclick="numPadPress('3')">3</button><button onclick="numPadPress('.')">.</button><button onclick="numPadPress('0')">0</button><button onclick="numPadPress('00')">00</button><button class="btn-ok" onclick="submitFreeInput()">→ 決定</button></div><div class="history-strip" id="history-strip"></div></div>
+  <div class="feedback-toast" id="feedback-toast"></div>
+</div>
+
+<div id="screen-result" class="screen">
+  <div class="result-inner">
+    <div class="result-title">🏁 FINAL RESULT</div><div id="result-medal" class="result-medal"></div><div class="result-rank-num" id="result-rank">—位</div><div id="new-record-area"></div><div id="achievements-area"></div><div class="ghost-result-list" id="ghost-result-list"></div>
+    <div class="result-stats"><div class="stat-card"><div class="stat-value" id="res-total">0</div><div class="stat-label">チャレンジ数</div></div><div class="stat-card"><div class="stat-value" id="res-correct">0</div><div class="stat-label">正解数</div></div><div class="stat-card"><div class="stat-value" id="res-accuracy">0%</div><div class="stat-label">正答率</div><div class="accuracy-bar-wrap"><div class="accuracy-bar" id="res-accuracy-bar"></div></div></div><div class="stat-card"><div class="stat-value" id="res-best-streak">0</div><div class="stat-label">最大連続正解</div></div></div>
+    <div id="combo-display" style="margin-bottom:1rem"></div><div class="result-btns"><button class="btn-primary" onclick="retryGame()">🔁 もう一度！</button><button class="btn-secondary" onclick="showScreen('select')">📚 モードを変える</button><button class="btn-secondary" onclick="showScreen('start')">🏠 トップへ</button></div>
+  </div>
+</div>
+
+<script>
+'use strict';
+const STUDYNEXT_ACTIVE_KEY='studynext_active_user_v1';
+const STUDYNEXT_AUTH_API_URL='';
+let authMode='login';
+const R=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+const pick=arr=>arr[Math.floor(Math.random()*arr.length)];
+const gcd=(a,b)=>b===0?Math.abs(a):gcd(b,a%b);
+const lcm=(a,b)=>Math.abs(a*b)/gcd(a,b);
+const mkQ=(text,answer,context='')=>({text,answer:String(answer).trim(),context});
+function setAuthMode(mode){authMode=mode;document.getElementById('auth-tab-login').classList.toggle('active',mode==='login');document.getElementById('auth-tab-register').classList.toggle('active',mode==='register');document.getElementById('auth-submit').textContent=mode==='login'?'ログイン':'新規登録';document.getElementById('auth-message').textContent=''}
+async function authRequest(action,email,password){const res=await fetch(STUDYNEXT_AUTH_API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,email,password})});const data=await res.json().catch(()=>({}));if(!res.ok||!data.ok)throw new Error(data.error||'auth_failed');return data.user}
+async function submitAuth(event){event.preventDefault();const email=document.getElementById('auth-email').value.trim().toLowerCase();const password=document.getElementById('auth-password').value;const msg=document.getElementById('auth-message');const btn=document.getElementById('auth-submit');if(password.length<8){msg.textContent='パスワードは8文字以上です。';return}btn.disabled=true;msg.textContent='GitHub DBに接続しています...';try{const user=await authRequest(authMode==='register'?'register':'login',email,password);localStorage.setItem(STUDYNEXT_ACTIVE_KEY,JSON.stringify({email:user.email,loginAt:new Date().toISOString()}));initAfterLogin(user.email)}catch(error){const code=String(error.message||'');if(code==='github_env_not_configured')msg.textContent='GitHub DBの環境変数が未設定です。';else if(code==='already_exists')msg.textContent='登録済みです。';else if(code==='invalid_credentials')msg.textContent='メールアドレスかパスワードが違います。';else msg.textContent='ログインDBに接続できません。'}finally{btn.disabled=false}}
+function logoutStudyNext(){try{window.parent.postMessage({type:'studynext:back'},'*')}catch(e){showScreen('start')}}
+function initAfterLogin(email){GS.username=email.split('@')[0].slice(0,12)||'プレイヤー';loadLocalData();showScreen('start');updateStartBestDisplay()}
+function g1_add(){const a=R(1,9),b=R(1,9);return mkQ(`${a} ＋ ${b} = ?`,a+b,'たし算')}
+function g1_sub(){const a=R(4,18),b=R(1,Math.min(9,a));return mkQ(`${a} − ${b} = ?`,a-b,'ひき算')}
+function g2_mul(){const a=R(2,9),b=R(2,9);return mkQ(`${a} × ${b} = ?`,a*b,'九九')}
+function g3_div(){const b=R(2,9),q=R(2,12);return mkQ(`${b*q} ÷ ${b} = ?`,q,'わり算')}
+function g4_dec(){const a=(R(10,90)/10).toFixed(1),b=(R(1,9)/10).toFixed(1);return pick([mkQ(`${a} ＋ ${b} = ?`,(parseFloat(a)+parseFloat(b)).toFixed(1),'小数'),mkQ(`${a} × ${R(2,9)} = ?`,(parseFloat(a)*R(2,9)).toFixed(1),'小数')])}
+function g5_frac(){const d1=R(2,8),d2=R(2,8),n1=R(1,d1-1),n2=R(1,d2-1),L=lcm(d1,d2),num=n1*(L/d1)+n2*(L/d2),g=gcd(num,L);return mkQ(`${d1}分の${n1} ＋ ${d2}分の${n2} = ?`,`${L/g}分の${num/g}`,'分数')}
+function g6_sym(){return pick([mkQ('正六角形の 対称の軸は 何本?',6,'対称'),mkQ('長方形は 点対称ですか?','はい','対称'),mkQ('正三角形は 点対称ですか?','いいえ','対称'),mkQ('平行四辺形は 点対称ですか?','はい','対称'),mkQ('正方形の 対称の軸は 何本?',4,'対称')])}
+function g_area(){const w=R(2,12),h=R(2,12);return pick([mkQ(`縦${h}cm 横${w}cm の 面積は?`,w*h+'cm²','面積'),mkQ(`一辺${w}cm の 正方形の 面積は?`,w*w+'cm²','面積')])}
+function g_time(){const h=R(1,3),m=R(10,50);return pick([mkQ(`${h}時間${m}分 は 何分?`,h*60+m,'時間'),mkQ('1時間 は 何分?',60,'時間')])}
+const CURRICULUM={1:[{id:'1-1',name:'たし算',gen:g1_add},{id:'1-2',name:'ひき算',gen:g1_sub}],2:[{id:'2-1',name:'九九',gen:g2_mul},{id:'2-2',name:'長さ・時間',gen:g_time}],3:[{id:'3-1',name:'わり算',gen:g3_div},{id:'3-2',name:'面積',gen:g_area}],4:[{id:'4-1',name:'小数',gen:g4_dec},{id:'4-2',name:'面積',gen:g_area}],5:[{id:'5-1',name:'分数',gen:g5_frac},{id:'5-2',name:'小数',gen:g4_dec}],6:[{id:'6-1',name:'対称',gen:g6_sym},{id:'6-2',name:'分数',gen:g5_frac}]};
+const GHOST_NAMES=['タケシ','ハナコ','リョウ','ミユキ','カイト','サクラ','ヒロト','アオイ','ケンジ','ユイ','マサト','チヒロ','ソウスケ','リン','コウタ','モモ','シンタロウ','アカネ','ダイキ','ナナ','ユウト','ミサキ','タカヒロ','エマ','コウスケ','ハルカ','ノブユキ','アスカ','マサキ','クルミ'];
+const GHOST_EMOJIS=['🚙','🚕','🚗','🚌','🏍️','🚐','🚑','🚓','🛻','🚒'];
+function makeGhosts(level){const b={easy:[3,4,5,5,6,6,7,7,8,8,8,9,9,10,10,10,11,11,12,12,13,14,15,16,17,18,19,20,22,24],normal:[2,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,12,13,14,15,16,17,18,20,21,23,25,27,30],hard:[1,2,3,3,4,4,5,5,6,6,7,7,8,8,9,10,11,12,13,14,15,16,17,18,20,22,24,26,29,33]};return (b[level]||b.normal).map((score,i)=>({name:GHOST_NAMES[i],score,emoji:GHOST_EMOJIS[i%GHOST_EMOJIS.length]}))}
+const GS={screen:'auth',grade:1,unit:'1-1',level:'normal',mode:'normal',timer:60,timerInterval:null,score:0,total:0,streak:0,bestStreak:0,currentQ:null,choices:[],correctIdx:-1,ghosts:[],history:[],activeInputMode:'choice',inputBuffer:'',locked:false,username:'プレイヤー',sfx:'on',inputMode:'auto',transitionDelay:400,theme:'default',totalCorrects:0,bestScores:{},shield:false,freezeTime:0,itemChance:false,nextItem:null};
+function saveLocalData(){const active=JSON.parse(localStorage.getItem(STUDYNEXT_ACTIVE_KEY)||'null');const key='speedSansuu_'+(active?.email||'guest');localStorage.setItem(key,JSON.stringify({username:GS.username,sfx:GS.sfx,bestScores:GS.bestScores,inputMode:GS.inputMode,theme:GS.theme,totalCorrects:GS.totalCorrects}));localStorage.setItem('speedSansuu',JSON.stringify({theme:GS.theme}))}
+function loadLocalData(){const active=JSON.parse(localStorage.getItem(STUDYNEXT_ACTIVE_KEY)||'null');const key='speedSansuu_'+(active?.email||'guest');try{const d=JSON.parse(localStorage.getItem(key)||'{}');if(d.username)GS.username=d.username;if(d.sfx)GS.sfx=d.sfx;if(d.bestScores)GS.bestScores=d.bestScores;if(d.inputMode)GS.inputMode=d.inputMode;if(d.theme)GS.theme=d.theme;if(d.totalCorrects)GS.totalCorrects=d.totalCorrects;applyTheme(GS.theme)}catch(e){}}
+function downloadBackup(){const blob=new Blob([JSON.stringify(GS,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`speedsansuu_backup_${Date.now()}.json`;a.click()}
+function loadBackup(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);Object.assign(GS,{username:d.username||GS.username,bestScores:d.bestScores||GS.bestScores,sfx:d.sfx||GS.sfx,inputMode:d.inputMode||GS.inputMode,theme:d.theme||GS.theme,totalCorrects:d.totalCorrects||GS.totalCorrects});saveLocalData();applyTheme(GS.theme);alert('読み込みました。');updateStartBestDisplay()}catch(err){alert('読み込み失敗。')}};r.readAsText(f);e.target.value=''}
+function resetData(){if(!confirm('スコアをすべてリセットしますか？'))return;GS.bestScores={};GS.totalCorrects=0;saveLocalData();updateStartBestDisplay()}
+function getPlayerTitle(){const t=GS.totalCorrects;if(t<50)return'🔰 かけだし計算係';if(t<200)return'🏃 計算ルーキー';if(t<500)return'🔥 炎の暗算マン';if(t<1000)return'💎 計算マスター';if(t<3000)return'👑 歩く電卓';return'🌌 計算神'}
+function applyTheme(theme){document.body.className='';if(theme==='light')document.body.classList.add('theme-light');if(theme==='black')document.body.classList.add('theme-black');if(theme==='cyber')document.body.classList.add('theme-cyber');if(theme==='sunset')document.body.classList.add('theme-sunset')}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-'+id).classList.add('active');GS.screen=id;if(id==='start')updateStartBestDisplay()}
+function showPanel(id){document.getElementById('panel-'+id).classList.add('active');if(id==='settings'){document.getElementById('input-username').value=GS.username;document.getElementById('select-inputmode').value=GS.inputMode;document.getElementById('select-sfx').value=GS.sfx;document.getElementById('select-theme').value=GS.theme;document.getElementById('select-speed').value=String(GS.transitionDelay)}}
+function hidePanel(id){document.getElementById('panel-'+id).classList.remove('active')}
+function saveSettings(){GS.username=document.getElementById('input-username').value.trim()||GS.username;GS.inputMode=document.getElementById('select-inputmode').value;GS.sfx=document.getElementById('select-sfx').value;GS.theme=document.getElementById('select-theme').value;GS.transitionDelay=parseInt(document.getElementById('select-speed').value)||400;saveLocalData();applyTheme(GS.theme);hidePanel('settings');updateStartBestDisplay()}
+function updateStartBestDisplay(){const el=document.getElementById('start-player-title');if(el)el.innerHTML=`${GS.username}<br>称号: <span style="color:var(--neon-b)">${getPlayerTitle()}</span><br><span style="font-size:.82rem;color:rgba(255,255,255,.65)">累計正解数: ${GS.totalCorrects}問</span>`}
+function goToSelect(){showScreen('select');buildGradeChips();selectGrade(GS.grade);selectMode(GS.mode);selectLevel(GS.level)}
+function buildGradeChips(){const c=document.getElementById('grade-chips');c.innerHTML='';[1,2,3,4,5,6].forEach(g=>{const b=document.createElement('button');b.className='chip'+(g===GS.grade?' selected':'');b.textContent=g+'年生';b.onclick=()=>selectGrade(g);c.appendChild(b)})}
+function selectGrade(g){GS.grade=g;document.querySelectorAll('#grade-chips .chip').forEach((c,i)=>c.classList.toggle('selected',i+1===g));const units=CURRICULUM[g];if(!GS.unit||!units.find(u=>u.id===GS.unit))GS.unit=units[0].id;buildUnitChips();updateBestScore()}
+function buildUnitChips(){const c=document.getElementById('unit-chips');c.innerHTML='';CURRICULUM[GS.grade].forEach(u=>{const b=document.createElement('button');b.className='chip'+(u.id===GS.unit?' selected':'');b.textContent=u.name;b.onclick=()=>selectUnit(u.id);c.appendChild(b)})}
+function selectUnit(id){GS.unit=id;buildUnitChips();updateBestScore()}
+function selectMode(m){GS.mode=m;['normal','survival','item'].forEach(x=>document.getElementById('mode-card-'+x).classList.toggle('selected',m===x));updateBestScore()}
+function selectLevel(l){GS.level=l;document.querySelectorAll('.level-card[data-level]').forEach(c=>c.classList.toggle('selected',c.dataset.level===l));updateBestScore()}
+function updateBestScore(){const best=GS.bestScores[`${GS.unit}_${GS.level}_${GS.mode}`];document.getElementById('best-score-display').textContent=best?`🏆 このモードの自己ベスト: ${best}問`:''}
+let audioCtx=null;function playTone(freq,dur,type='sine',vol=.25){if(GS.sfx==='off')return;try{audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(vol,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+dur);o.start();o.stop(audioCtx.currentTime+dur)}catch(e){}}
+function startGame(){if(!GS.unit)return;const modeMap={easy:'choice',normal:'choice',hard:'type'};GS.activeInputMode=GS.inputMode==='auto'?modeMap[GS.level]:GS.inputMode;GS.ghosts=makeGhosts(GS.level);const best=GS.bestScores[`${GS.unit}_${GS.level}_${GS.mode}`];if(best)GS.ghosts.push({name:'過去の自分',score:best,emoji:'👻'});Object.assign(GS,{score:0,total:0,streak:0,bestStreak:0,timer:60,history:[],locked:false,inputBuffer:'',shield:false,freezeTime:0,itemChance:false,nextItem:null});showScreen('game');buildRaceCars();updateHUD();const u=CURRICULUM[GS.grade].find(u=>u.id===GS.unit);document.getElementById('game-mode-tag').textContent=`${GS.grade}年 / ${u.name} / ${GS.level} / ${GS.mode}`;nextQuestion();startTimer()}
+function retryGame(){startGame()}
+function buildRaceCars(){const c=document.getElementById('car-container');c.innerHTML='';const p=document.createElement('div');p.className='race-car player-car';p.id='player-car';p.textContent='🏎️';c.appendChild(p);GS.ghosts.forEach((g,i)=>{const el=document.createElement('div');el.className='race-car ghost-car';el.id='ghost-'+i;el.style.top=5+(i%8)/8*80+'%';el.style.left='8%';const label=document.createElement('span');label.className='ghost-label';label.textContent=g.name;el.appendChild(label);el.appendChild(document.createTextNode(g.emoji));c.appendChild(el)})}
+function updateRacePositions(){const max=Math.max(...GS.ghosts.map(g=>g.score),GS.score,1);const p=document.getElementById('player-car');if(p)p.style.left=5+Math.min(GS.score/max,1)*78+'%';let rank=1;GS.ghosts.forEach((g,i)=>{const el=document.getElementById('ghost-'+i);if(el)el.style.left=5+Math.min(g.score/max,1)*78+'%';if(g.score>GS.score)rank++});document.getElementById('race-rank').textContent=rank;return rank}
+function showBuff(){document.getElementById('buff-icons').textContent=(GS.shield?'🛡️ ':'')+(GS.freezeTime>0?'❄️':'')}
+function startTimer(){clearInterval(GS.timerInterval);GS.timerInterval=setInterval(()=>{if(GS.freezeTime>0){GS.freezeTime=Math.max(0,GS.freezeTime-.1);showBuff()}else{GS.timer=Math.round((GS.timer-.1)*10)/10;if(GS.timer<=0){GS.timer=0;endGame();return}}updateHUD()},100)}
+function updateHUD(){const t=Math.max(0,GS.timer);const timer=document.getElementById('hud-timer');timer.textContent=t.toFixed(1);timer.style.color=GS.freezeTime>0?'var(--neon-b)':'';timer.classList.toggle('danger',t<10&&GS.freezeTime<=0);document.getElementById('hud-score').textContent=GS.score;document.getElementById('streak-fire').textContent=GS.streak>=5?'🔥🔥':GS.streak>=3?'🔥':'⚡';document.getElementById('streak-num').textContent='×'+(GS.streak>=5?3:GS.streak>=3?2:1);const bar=document.getElementById('time-bar');bar.style.width=Math.min(t/60*100,100)+'%';bar.classList.toggle('danger',t<10&&GS.freezeTime<=0)}
+function shouldUseChoicesForQuestion(q){const a=String(q.answer||'').trim();if(['はい','いいえ','同じ'].includes(a))return true;if(/[^\d.\-]/.test(a)&&!/(cm|m|km|g|kg|t|L|dL|mL|cm²|m²|km²|cm³|m³|°|%|人|円|個|問|時間|分|通り)$/.test(a))return true;return false}
+function nextQuestion(){if(GS.screen!=='game')return;GS.locked=false;GS.inputBuffer='';GS.itemChance=GS.mode==='item'&&Math.random()<.25;GS.nextItem=GS.itemChance?pick(['time','boost','shield','freeze']):null;const unit=CURRICULUM[GS.grade].find(u=>u.id===GS.unit);GS.currentQ=unit.gen();const q=GS.currentQ;document.getElementById('q-context').textContent=GS.itemChance?'🎁 アイテムチャンス':q.context;document.getElementById('q-text').textContent=q.text;if(shouldUseChoicesForQuestion(q))showChoices(q,GS.level==='easy'?3:4);else if(GS.activeInputMode==='type')showTypeInput();else showChoices(q,GS.level==='easy'?3:4);updateRacePositions()}
+function generateWrongAnswers(correct,count){const wrongs=new Set();let att=0;while(wrongs.size<count&&att++<80){let w;const num=parseFloat(correct);if(!isNaN(num)&&/^-?[\d.]+/.test(correct)){const unit=String(correct).replace(/^-?[\d.]+/,'');w=(num+pick([-3,-2,-1,1,2,3]))+unit}else if(correct==='はい')w='いいえ';else if(correct==='いいえ')w='はい';else if(/分の/.test(correct)){const m=correct.match(/(\d+)分の(\d+)/);w=m?`${m[1]}分の${Math.max(1,parseInt(m[2])+pick([-1,1,2]))}`:'1'}else w=pick(['はい','いいえ','同じ','直角','平行','円']);w=String(w).trim();if(w&&w!==correct)wrongs.add(w)}return[...wrongs].slice(0,count)}
+function showChoices(q,count){const grid=document.getElementById('choices-grid'),fiw=document.getElementById('free-input-wrap'),np=document.getElementById('num-pad');grid.style.display='grid';fiw.style.display='none';np.style.display='none';grid.innerHTML='';const opts=[q.answer,...generateWrongAnswers(q.answer,count-1)].sort(()=>Math.random()-.5);GS.choices=opts;GS.correctIdx=opts.indexOf(q.answer);opts.forEach((opt,i)=>{const b=document.createElement('button');b.className='choice-btn';b.textContent=opt;b.onclick=()=>answerChoice(i);grid.appendChild(b)});grid.style.gridTemplateColumns=count===3?'repeat(3,1fr)':'1fr 1fr'}
+function showTypeInput(){document.getElementById('choices-grid').style.display='none';document.getElementById('free-input-wrap').style.display='flex';document.getElementById('num-pad').style.display='grid';const inp=document.getElementById('free-input');inp.value='';inp.className='free-input';setTimeout(()=>inp.focus(),50)}
+function numPadPress(key){if(GS.locked)return;const inp=document.getElementById('free-input');if(key==='del')GS.inputBuffer=GS.inputBuffer.slice(0,-1);else if(key==='.'&&!GS.inputBuffer.includes('.'))GS.inputBuffer+='.';else if(key==='-'&&!GS.inputBuffer.startsWith('-'))GS.inputBuffer='-'+GS.inputBuffer;else if(key!=='.'&&key!=='-')GS.inputBuffer+=key;inp.value=GS.inputBuffer}
+function submitFreeInput(){if(GS.locked)return;const val=document.getElementById('free-input').value.trim();if(val)checkAnswer(val)}
+document.addEventListener('keydown',e=>{if(GS.screen!=='game'||GS.locked)return;if(GS.activeInputMode==='type'&&e.key==='Enter'){e.preventDefault();submitFreeInput()}else if(['1','2','3','4'].includes(e.key)&&GS.choices[parseInt(e.key)-1])answerChoice(parseInt(e.key)-1)})
+function answerChoice(idx){if(GS.locked)return;GS.locked=true;const ok=idx===GS.correctIdx;const btns=document.querySelectorAll('.choice-btn');if(btns[idx])btns[idx].classList.add(ok?'correct':'wrong');if(!ok&&btns[GS.correctIdx])btns[GS.correctIdx].classList.add('correct');processAnswer(ok);setTimeout(nextQuestion,GS.transitionDelay)}
+function checkAnswer(val){if(GS.locked)return;GS.locked=true;const ok=val.trim()===GS.currentQ.answer.trim();document.getElementById('free-input').className='free-input '+(ok?'correct':'wrong');processAnswer(ok);setTimeout(nextQuestion,GS.transitionDelay)}
+function triggerItem(type){if(type==='time'){GS.timer=Math.min(GS.timer+10,90);showToast('🕒 タイム+10秒！','var(--neon-b)')}else if(type==='boost'){GS.score+=3;showToast('🚀 ブースト！','var(--neon-y)')}else if(type==='shield'){GS.shield=true;showBuff();showToast('🛡️ シールド！','var(--neon-g)')}else if(type==='freeze'){GS.freezeTime=5;showBuff();showToast('❄️ ストップ！','var(--neon-b)')}}
+function processAnswer(ok){GS.total++;const prev=updateRacePositions();if(ok){GS.score++;GS.streak++;GS.bestStreak=Math.max(GS.bestStreak,GS.streak);const bonus=GS.streak>=5?5:GS.streak>=3?4:2;GS.timer=GS.mode==='survival'?GS.timer+bonus:Math.min(GS.timer+bonus,90);playTone(660,.07);setTimeout(()=>playTone(880,.08),80);if(GS.itemChance)triggerItem(GS.nextItem);else showToast(GS.streak>=5?'🔥 SUPER!!':GS.streak>=3?'⚡ GREAT!':'✓ 正解！','var(--neon-g)');GS.history.push('ok')}else{if(GS.shield){GS.shield=false;showBuff();GS.streak=0;showToast('🛡️ 防御！','var(--neon-g)')}else{GS.streak=0;GS.timer=GS.mode==='survival'?0:Math.max(0,GS.timer-3);playTone(220,.12,'sawtooth');showToast(GS.mode==='survival'?'💀 終了！':'✕ −3秒','var(--neon-r)')}GS.history.push('ng')}if(updateRacePositions()<prev)playTone(1100,.1);updateHUD();updateHistoryStrip()}
+function showToast(msg,color){const t=document.getElementById('feedback-toast');t.textContent=msg;t.style.color=color;t.classList.remove('show');void t.offsetWidth;t.classList.add('show')}
+function updateHistoryStrip(){const s=document.getElementById('history-strip');s.innerHTML='';GS.history.slice(-16).forEach(h=>{const d=document.createElement('div');d.className='hist-dot '+h;s.appendChild(d)})}
+function endGame(){clearInterval(GS.timerInterval);GS.totalCorrects+=GS.score;const all=[...GS.ghosts.map(g=>({name:g.name,score:g.score,isPlayer:false})),{name:GS.username,score:GS.score,isPlayer:true}].sort((a,b)=>b.score-a.score);const rank=all.findIndex(a=>a.isPlayer)+1;const key=`${GS.unit}_${GS.level}_${GS.mode}`;const isRecord=!GS.bestScores[key]||GS.score>GS.bestScores[key];if(isRecord&&GS.score>0)GS.bestScores[key]=GS.score;saveLocalData();showScreen('result');document.getElementById('result-medal').textContent=rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':'🏁';document.getElementById('result-rank').textContent=rank+'位';document.getElementById('new-record-area').innerHTML=isRecord&&GS.score>0?'<div class="new-record-badge">NEW RECORD!</div>':'';document.getElementById('res-total').textContent=GS.total;document.getElementById('res-correct').textContent=GS.score;const acc=GS.total?Math.round(GS.score/GS.total*100):0;document.getElementById('res-accuracy').textContent=acc+'%';setTimeout(()=>document.getElementById('res-accuracy-bar').style.width=acc+'%',100);document.getElementById('res-best-streak').textContent=GS.bestStreak;document.getElementById('combo-display').textContent=`最大${GS.bestStreak}連続正解`;document.getElementById('achievements-area').innerHTML=[GS.bestStreak>=10?'🔥 10コンボ':'',GS.score>=30?'⚡ 30問正解':'',isRecord&&GS.score>0?'🏆 自己ベスト更新':''].filter(Boolean).map(a=>`<span class="ach-badge">${a}</span>`).join('');buildGhostResultList(all,rank)}
+function buildGhostResultList(all,rank){const list=document.getElementById('ghost-result-list');list.innerHTML='';const start=Math.max(0,rank-4),end=Math.min(all.length,rank+3);all.slice(start,end).forEach((a,i)=>{const rr=start+i+1;const row=document.createElement('div');row.className='ghost-result-row'+(a.isPlayer?' you highlight':rr<=3?' highlight':'');row.innerHTML=`<span class="gr-rank">${rr}位</span><span class="gr-name">${a.isPlayer?'🏎️ ':''}${a.name}</span><span class="gr-score">${a.score}問</span>`;list.appendChild(row)})}
+(function init(){let active=null;try{active=JSON.parse(localStorage.getItem(STUDYNEXT_ACTIVE_KEY)||'null')}catch(e){}if(!active||!active.email){active={email:'studynext.local@example.com',loginAt:new Date().toISOString()};try{localStorage.setItem(STUDYNEXT_ACTIVE_KEY,JSON.stringify(active))}catch(e){}}initAfterLogin(active.email);GS.unit=CURRICULUM[1][0].id})();
+</script>
+</body>
+</html>
