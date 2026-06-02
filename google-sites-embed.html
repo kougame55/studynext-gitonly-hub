@@ -6,9 +6,10 @@
 <title>StudyNext Portal</title>
 <style>
 :root{--bg:#f6f9ff;--ink:#142033;--muted:#65758d;--panel:#fff;--panel2:#eef5ff;--line:#d9e5f6;--accent:#1769ff;--accent2:#00a7c8;--ok:#0f9f6e;--warn:#d98900;--bad:#d9365f;--shadow:0 22px 70px rgba(38,74,130,.16);--radius:8px}
+body.theme-contrast{--bg:#fff;--ink:#0b1220;--muted:#334155;--panel:#fff;--panel2:#e0f2fe;--line:#0f172a;--accent:#003f9e;--accent2:#00748a;--shadow:0 10px 30px rgba(15,23,42,.18)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI","Noto Sans JP",sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}.app-bg{position:fixed;inset:0;z-index:-2;background:linear-gradient(135deg,#f7fbff,#edf5ff 52%,#f9fbff)}.app-bg:after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(23,105,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(23,105,255,.08) 1px,transparent 1px);background-size:38px 38px;mask-image:linear-gradient(to bottom,black,transparent 78%)}
 .auth{min-height:100vh;display:grid;grid-template-columns:minmax(0,1fr) 430px;gap:22px;align-items:center;padding:28px;width:min(1180px,100%);margin:auto}.intro{min-height:620px;border:1px solid var(--line);background:linear-gradient(145deg,#ffffff,#eef6ff);box-shadow:var(--shadow);border-radius:var(--radius);padding:34px;display:flex;flex-direction:column;justify-content:space-between}.brand{display:flex;align-items:center;gap:12px;font-weight:950;font-size:1.2rem}.mark{width:42px;height:42px;border-radius:8px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white}.intro h1{font-size:clamp(2.6rem,6vw,5.5rem);line-height:1;margin:46px 0 18px;letter-spacing:0}.intro p{max-width:660px;color:var(--muted);line-height:1.8;font-size:1.05rem}.signal{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.signal div{border:1px solid var(--line);background:white;border-radius:var(--radius);padding:16px}.signal b{display:block;color:var(--accent);font-size:1.25rem}.signal span{color:var(--muted);font-size:.84rem}.panel{border:1px solid var(--line);background:rgba(255,255,255,.92);box-shadow:var(--shadow);border-radius:var(--radius);padding:22px}.tabs,.seg{display:grid;gap:8px;padding:6px;border:1px solid var(--line);background:var(--panel2);border-radius:var(--radius);margin-bottom:14px}.tabs{grid-template-columns:1fr 1fr}.seg{grid-template-columns:1fr 1fr}.tabs button,.seg button{border:0;border-radius:6px;background:transparent;color:var(--muted);font-weight:900;padding:11px}.tabs button.active,.seg button.active{background:white;color:var(--accent);box-shadow:0 8px 22px rgba(23,105,255,.12)}.form{display:grid;gap:12px}.field{display:grid;gap:6px;color:var(--muted);font-weight:850;font-size:.86rem}.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:var(--radius);background:white;color:var(--ink);outline:none;padding:13px}.field textarea{min-height:88px;resize:vertical}.field input:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(23,105,255,.1)}.primary,.secondary,.danger,.iconbtn{border-radius:var(--radius);border:1px solid var(--line);font-weight:950}.primary{border-color:transparent;background:linear-gradient(135deg,var(--accent),#00b6d6);color:white;padding:13px}.secondary{background:white;color:var(--ink);padding:12px}.danger{background:#fff2f5;color:var(--bad);padding:12px}.google{display:flex;justify-content:center;align-items:center;gap:8px}.msg{min-height:1.4em;color:var(--bad);font-weight:900;text-align:center;line-height:1.5}.msg.ok{color:var(--ok)}.hint{font-size:.82rem;color:var(--muted);line-height:1.55;text-align:center}.hide{display:none!important}
-.portal{display:none;min-height:100vh}.shell{display:grid;grid-template-columns:240px 1fr;min-height:100vh}.side{border-right:1px solid var(--line);background:rgba(255,255,255,.88);padding:18px;position:sticky;top:0;height:100vh}.side .brand{margin-bottom:22px}.nav{display:grid;gap:8px}.nav button{display:flex;align-items:center;gap:10px;border:0;border-radius:var(--radius);background:transparent;color:var(--muted);font-weight:950;text-align:left;padding:12px}.nav button.active{background:var(--panel2);color:var(--accent)}.me{position:absolute;left:18px;right:18px;bottom:18px;border:1px solid var(--line);border-radius:var(--radius);background:white;padding:12px;color:var(--muted);font-size:.84rem;line-height:1.5}.main{padding:24px;width:min(1160px,100%)}.top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:18px}.top h1{margin:0;font-size:2rem}.top p{margin:7px 0 0;color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}.card{border:1px solid var(--line);border-radius:var(--radius);background:white;box-shadow:0 10px 34px rgba(38,74,130,.08);padding:16px}.appCard{text-align:left;min-height:166px;display:flex;flex-direction:column;gap:10px}.appCard .emoji{font-size:2rem}.appCard b{font-size:1.18rem}.appCard p{margin:0;color:var(--muted);line-height:1.55}.appCard small{margin-top:auto;color:var(--ok);font-weight:950}.list{display:grid;gap:12px}.messageTitle{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;background:var(--panel2);color:var(--accent);font-weight:900;font-size:.76rem;padding:5px 9px}.replyBox{display:grid;gap:8px;margin-top:12px}.survey{display:grid;gap:10px;margin-top:12px;border-top:1px solid var(--line);padding-top:12px}.runner{display:none;position:fixed;inset:0;background:#f6f9ff;z-index:20}.runnerBar{height:58px;border-bottom:1px solid var(--line);background:white;display:flex;align-items:center;gap:10px;padding:8px 12px}.runnerTitle{font-weight:950;flex:1}.runner iframe{width:100%;height:calc(100vh - 58px);border:0;background:white}.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#142033;color:white;border-radius:var(--radius);padding:12px 16px;font-weight:900;box-shadow:var(--shadow);display:none;z-index:30}.toast.show{display:block}@media(max-width:860px){.auth{grid-template-columns:1fr;padding:14px}.intro{min-height:auto}.signal{grid-template-columns:1fr}.shell{grid-template-columns:1fr}.side{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line)}.me{position:static;margin-top:14px}.main{padding:14px}.top{flex-direction:column}.runnerBar{height:64px}.runner iframe{height:calc(100vh - 64px)}}
+.portal{display:none;min-height:100vh}.shell{display:grid;grid-template-columns:240px 1fr;min-height:100vh}.side{border-right:1px solid var(--line);background:rgba(255,255,255,.88);padding:18px;position:sticky;top:0;height:100vh}.side .brand{margin-bottom:22px}.nav{display:grid;gap:8px}.nav button{display:flex;align-items:center;gap:10px;border:0;border-radius:var(--radius);background:transparent;color:var(--muted);font-weight:950;text-align:left;padding:12px}.nav button.active{background:var(--panel2);color:var(--accent)}.me{position:absolute;left:18px;right:18px;bottom:18px;border:1px solid var(--line);border-radius:var(--radius);background:white;padding:12px;color:var(--muted);font-size:.84rem;line-height:1.5}.main{padding:24px;width:min(1160px,100%)}.top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:18px}.top h1{margin:0;font-size:2rem}.top p{margin:7px 0 0;color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}.card{border:1px solid var(--line);border-radius:var(--radius);background:white;box-shadow:0 10px 34px rgba(38,74,130,.08);padding:16px}.appCard{text-align:left;min-height:166px;display:flex;flex-direction:column;gap:10px}.appCard .emoji{font-size:2rem}.appCard b{font-size:1.18rem}.appCard p{margin:0;color:var(--muted);line-height:1.55}.appCard small{margin-top:auto;color:var(--ok);font-weight:950}.list{display:grid;gap:12px}.messageTitle{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;background:var(--panel2);color:var(--accent);font-weight:900;font-size:.76rem;padding:5px 9px}.replyBox{display:grid;gap:8px;margin-top:12px}.survey{display:grid;gap:10px;margin-top:12px;border-top:1px solid var(--line);padding-top:12px}.printSheet{display:grid;gap:12px}.printQ{border-top:1px solid var(--line);padding-top:12px}.printQ b{display:block;margin-bottom:7px}.runner{display:none;position:fixed;inset:0;background:#f6f9ff;z-index:20}.runnerBar{height:58px;border-bottom:1px solid var(--line);background:white;display:flex;align-items:center;gap:10px;padding:8px 12px}.runnerTitle{font-weight:950;flex:1}.runner iframe{width:100%;height:calc(100vh - 58px);border:0;background:white}.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#142033;color:white;border-radius:var(--radius);padding:12px 16px;font-weight:900;box-shadow:var(--shadow);display:none;z-index:30}.toast.show{display:block}@media(max-width:860px){.auth{grid-template-columns:1fr;padding:14px}.intro{min-height:auto}.signal{grid-template-columns:1fr}.shell{grid-template-columns:1fr}.side{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line)}.me{position:static;margin-top:14px}.main{padding:14px}.top{flex-direction:column}.runnerBar{height:64px}.runner iframe{height:calc(100vh - 64px)}}
 </style>
 </head>
 <body>
@@ -48,14 +49,31 @@
       <div class="brand"><div class="mark">SN</div><div>Portal</div></div>
       <nav class="nav">
         <button id="appsTab" class="active" type="button">アプリ一覧</button>
+        <button id="printsTab" type="button">プリント</button>
         <button id="messagesTab" type="button">メッセージ</button>
+        <button id="settingsTab" type="button">設定</button>
       </nav>
       <div class="me"><b id="meName">ログイン中</b><br><span id="meSub"></span><br><button id="logoutBtn" class="danger" style="width:100%;margin-top:10px" type="button">ログアウト</button></div>
     </aside>
     <section class="main">
       <div class="top"><div><h1 id="pageTitle">アプリ一覧</h1><p id="pageLead">学習アプリを選んで開始します。</p></div></div>
       <section id="appsPanel"><div id="appGrid" class="grid"></div></section>
+      <section id="printsPanel" class="hide"><div id="printsList" class="list"></div></section>
       <section id="messagesPanel" class="hide"><div id="messagesList" class="list"></div></section>
+      <section id="settingsPanel" class="hide">
+        <form id="settingsForm" class="card form" style="max-width:560px">
+          <h3 style="margin:0">設定</h3>
+          <label class="field">表示名<input id="settingDisplayName" maxlength="24" placeholder="表示名"></label>
+          <label class="field">ベースカラー
+            <select id="settingTheme">
+              <option value="blue">StudyNextブルー</option>
+              <option value="contrast">高コントラスト</option>
+            </select>
+          </label>
+          <button class="primary" type="submit">保存</button>
+          <p class="hint" style="text-align:left">この設定は児童ポータルと追加アプリの見た目に使います。</p>
+        </form>
+      </section>
     </section>
   </div>
 </main>
@@ -74,11 +92,19 @@ const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getFirestore(app);
 const PROFILE_KEY="studynext_profile_v3";
-const DEFAULT_APPS=[{id:"speed",title:"SPEED算数",description:"レース形式で計算力を伸ばす学習アプリ。",url:"apps/speed.html",icon:"🏎️",source:"system"}];
+const DEFAULT_APPS=[
+  {id:"speed",title:"SPEED算数",description:"レース形式で計算力を伸ばす学習アプリ。",url:"apps/speed.html",icon:"🏎️",source:"system"},
+  {id:"kanji",title:"漢字スプリント",description:"漢字の読みをテンポよく選ぶ短時間ドリル。",url:"apps/kanji.html",icon:"漢",source:"system"},
+  {id:"english",title:"英単語リンク",description:"英単語と日本語の意味をすばやく結びます。",url:"apps/english.html",icon:"EN",source:"system"},
+  {id:"science",title:"理科クイズラボ",description:"身近な理科の要点をクイズで確認します。",url:"apps/science.html",icon:"理",source:"system"},
+  {id:"social",title:"社会タイムライン",description:"地理・歴史・公民の基本をチェックします。",url:"apps/social.html",icon:"社",source:"system"},
+  {id:"typing",title:"タイピング道場",description:"学習文を入力して正確さを伸ばします。",url:"apps/typing.html",icon:"⌨",source:"system"}
+];
 let mode="login";
 let accountType="personal";
 let profile=null;
 let unsubscribeMessages=null;
+let unsubscribePrints=null;
 let currentSession=null;
 const $=id=>document.getElementById(id);
 
@@ -88,6 +114,7 @@ function normalizeCode(code){return String(code||"").trim().toUpperCase().replac
 function randomPart(len){const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let out="";for(let i=0;i<len;i++)out+=chars[Math.floor(Math.random()*chars.length)];return out}
 function saveProfile(next){profile=next;localStorage.setItem(PROFILE_KEY,JSON.stringify(next));localStorage.setItem("studynext_active_user_v1",JSON.stringify({email:next.email||next.studentId,loginAt:new Date().toISOString()}))}
 function loadProfile(){try{return JSON.parse(localStorage.getItem(PROFILE_KEY)||"null")}catch{return null}}
+function applyUserSettings(){const settings=profile?.settings||{};document.body.classList.toggle("theme-contrast",settings.theme==="contrast")}
 function setMode(next){mode=next;$("loginTab").classList.toggle("active",next==="login");$("registerTab").classList.toggle("active",next==="register");$("emailSubmit").textContent=next==="login"?"ログイン":"新規登録";setMessage("")}
 function setAccountType(next){accountType=next;$("personalSeg").classList.toggle("active",next==="personal");$("schoolSeg").classList.toggle("active",next==="school");$("personalForm").classList.toggle("hide",next!=="personal");$("schoolForm").classList.toggle("hide",next!=="school");setMessage("")}
 
@@ -172,12 +199,16 @@ function firebaseError(error){
 
 function openPortal(){
   if(!profile)profile=loadProfile();
+  applyUserSettings();
   $("authView").style.display="none";
   $("portalView").style.display="block";
   $("meName").textContent=profile.realName||profile.displayName||profile.email||"StudyNext";
   $("meSub").textContent=profile.accountType==="school"?`${profile.className||"学校"} / ${profile.studentId}`:(profile.email||"個人アカウント");
+  $("settingDisplayName").value=profile.displayName||profile.realName||profile.email||profile.studentId||"";
+  $("settingTheme").value=profile.settings?.theme||"blue";
   renderApps();
   listenMessages();
+  listenPrints();
 }
 async function renderApps(){
   const grid=$("appGrid");
@@ -225,6 +256,45 @@ function listenMessages(){
     items.forEach(renderMessage);
   },error=>{$("messagesList").innerHTML='<div class="card">メッセージ取得エラー: '+escapeHtml(firebaseError(error))+"</div>"});
 }
+function listenPrints(){
+  if(unsubscribePrints)unsubscribePrints();
+  if(!profile?.classId){$("printsList").innerHTML='<div class="card">学校アカウントで入ると、先生から配られたデジタルプリントがここに届きます。</div>';return}
+  unsubscribePrints=onSnapshot(query(collection(db,"printAssignments"),where("classId","==",profile.classId)),snap=>{
+    const items=[];snap.forEach(d=>items.push({id:d.id,...d.data()}));items.sort((a,b)=>String(b.createdAtText||"").localeCompare(String(a.createdAtText||"")));
+    $("printsList").innerHTML="";
+    if(!items.length){$("printsList").innerHTML='<div class="card">まだプリントはありません。</div>';return}
+    items.forEach(renderPrint);
+  },error=>{$("printsList").innerHTML='<div class="card">プリント取得エラー: '+escapeHtml(firebaseError(error))+"</div>"});
+}
+function renderPrint(item){
+  const card=document.createElement("article");
+  card.className="card";
+  const questions=Array.isArray(item.questions)?item.questions:[];
+  card.innerHTML=`<div class="messageTitle"><div><h3 style="margin:0 0 8px">${escapeHtml(item.title||"デジタルプリント")}</h3><p style="margin:0;color:var(--muted);line-height:1.7">${escapeHtml(item.body||"")}</p></div><span class="pill">${escapeHtml(item.createdAtText||"")}</span></div>`;
+  const form=document.createElement("form");
+  form.className="printSheet";
+  questions.forEach((question,index)=>{
+    const block=document.createElement("label");
+    block.className="field printQ";
+    block.innerHTML=`<b>問${index+1}. ${escapeHtml(question)}</b><textarea name="q${index}" placeholder="ここに記入"></textarea>`;
+    form.appendChild(block);
+  });
+  const submit=document.createElement("button");
+  submit.className="primary";
+  submit.type="submit";
+  submit.textContent="提出する";
+  form.appendChild(submit);
+  form.onsubmit=async event=>{
+    event.preventDefault();
+    const answers={};
+    questions.forEach((question,index)=>answers[question]=new FormData(form).get("q"+index)||"");
+    const responseId=item.id+"_"+(profile.studentId||profile.uid);
+    await setDoc(doc(db,"printSubmissions",responseId),{assignmentId:item.id,classId:profile.classId,teacherUid:profile.teacherUid||item.teacherUid||"",uid:profile.uid,studentId:profile.studentId||"",realName:profile.realName||profile.displayName||"",answers,submittedAt:serverTimestamp(),submittedAtText:new Date().toLocaleString("ja-JP")},{merge:true});
+    toast("プリントを提出しました");
+  };
+  card.appendChild(form);
+  $("printsList").appendChild(card);
+}
 function renderMessage(item){
   const card=document.createElement("article");
   card.className="card";
@@ -245,11 +315,18 @@ function renderMessage(item){
   $("messagesList").appendChild(card);
 }
 function showTab(tab){
-  const apps=tab==="apps";
-  $("appsTab").classList.toggle("active",apps);$("messagesTab").classList.toggle("active",!apps);
-  $("appsPanel").classList.toggle("hide",!apps);$("messagesPanel").classList.toggle("hide",apps);
-  $("pageTitle").textContent=apps?"アプリ一覧":"メッセージ";
-  $("pageLead").textContent=apps?"学習アプリを選んで開始します。":"先生からの連絡、返信、アンケート回答を確認します。";
+  const meta={
+    apps:["アプリ一覧","学習アプリを選んで開始します。"],
+    prints:["プリント","先生から配られたデジタルプリントに記入して提出します。"],
+    messages:["メッセージ","先生からの連絡、返信、アンケート回答を確認します。"],
+    settings:["設定","表示名とポータルの見え方を調整します。"]
+  };
+  for(const key of Object.keys(meta)){
+    $(key+"Tab").classList.toggle("active",key===tab);
+    $(key+"Panel").classList.toggle("hide",key!==tab);
+  }
+  $("pageTitle").textContent=meta[tab][0];
+  $("pageLead").textContent=meta[tab][1];
 }
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[ch]))}
 function escapeAttr(value){return escapeHtml(value).replace(/"/g,"&quot;")}
@@ -263,7 +340,20 @@ $("schoolForm").onsubmit=handleSchoolSubmit;
 $("googleBtn").onclick=handleGoogle;
 $("logoutBtn").onclick=async()=>{await signOut(auth).catch(()=>{});localStorage.removeItem(PROFILE_KEY);localStorage.removeItem("studynext_active_user_v1");location.reload()};
 $("appsTab").onclick=()=>showTab("apps");
+$("printsTab").onclick=()=>showTab("prints");
 $("messagesTab").onclick=()=>showTab("messages");
+$("settingsTab").onclick=()=>showTab("settings");
+$("settingsForm").onsubmit=async event=>{
+  event.preventDefault();
+  const displayName=$("settingDisplayName").value.trim();
+  const settings={theme:$("settingTheme").value};
+  profile={...profile,displayName:displayName||profile.displayName,settings};
+  saveProfile(profile);
+  applyUserSettings();
+  $("meName").textContent=profile.realName||profile.displayName||profile.email||"StudyNext";
+  if(profile.uid)await setDoc(doc(db,"users",profile.uid),{displayName:profile.displayName||"",settings,updatedAt:serverTimestamp()},{merge:true}).catch(()=>{});
+  toast("設定を保存しました");
+};
 $("closeRunner").onclick=()=>closeApp();
 $("reloadRunner").onclick=()=>currentSession&&openApp({id:currentSession.appId,title:currentSession.appTitle,url:currentSession.url});
 window.addEventListener("message",event=>{if(event.data?.type==="studynext:back")closeApp();if(event.data?.type==="studynext:usage"&&currentSession){currentSession.logged=true;writeUsage(currentSession,event.data.payload||{})}});
