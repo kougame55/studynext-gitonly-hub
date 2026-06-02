@@ -13,13 +13,13 @@
 <main class="wrap">
   <section class="card">
     <h1>Firebase Auth 診断</h1>
-    <p class="muted">`auth/configuration-not-found` が出る時は、Firebase ConsoleでAuthenticationがまだ開始されていない状態です。このページで匿名ログインの初期化状態を確認できます。</p>
+    <p class="muted">`auth/configuration-not-found` が出る時は、Firebase ConsoleでAuthenticationがまだ開始されていない状態です。課金有効化は不要です。Firebase ConsoleのAuthentication画面で通常の「始める」を押してください。</p>
     <button id="checkBtn" type="button">Auth状態をチェック</button>
     <a href="https://console.firebase.google.com/project/studynext-14fab/authentication/providers?hl=ja" target="_blank" rel="noopener">Firebase Authentication設定を開く</a>
     <div id="status" class="status warn">まだチェックしていません。</div>
     <div class="steps">
       <div>1. Firebase Consoleで `Authentication` を開く</div>
-      <div>2. `始める` を押す</div>
+      <div>2. `始める` を押す（Blaze/課金有効化は押さない）</div>
       <div>3. `メール/パスワード` を有効化</div>
       <div>4. `匿名` を有効化（学校招待コード用）</div>
       <div>5. `Google` を有効化（個人Googleログイン用）</div>
@@ -43,7 +43,7 @@ document.getElementById("checkBtn").onclick=async()=>{
     show("ok","OK: Firebase Authenticationは開始済みで、匿名ログインも有効です。学校アカウントログインが動きます。");
   }catch(error){
     const code=String(error?.code||error?.message||"");
-    if(code.includes("configuration-not-found"))show("bad","NG: Authenticationがまだ開始されていません。Firebase Consoleで `Authentication → 始める` を押してください。");
+    if(code.includes("configuration-not-found"))show("bad","NG: Authenticationがまだ開始されていません。課金有効化は不要です。Firebase Consoleで `Authentication → 始める` を押してください。");
     else if(code.includes("operation-not-allowed"))show("bad","NG: Authenticationは開始済みですが、匿名ログインが無効です。Sign-in methodで `匿名` を有効にしてください。");
     else show("bad","NG: "+code);
   }
