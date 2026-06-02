@@ -2,7 +2,7 @@
   {
     "id": "speed",
     "title": "SPEED算数",
-    "description": "レース形式の計算チャレンジ。外部ログイン連携・点対称問題の入力矛盾修正済み。",
+    "description": "レース形式の計算チャレンジ。Firebase利用ログ連携・点対称問題の入力矛盾修正済み。",
     "src": "apps/speed.html"
   }
 ]
