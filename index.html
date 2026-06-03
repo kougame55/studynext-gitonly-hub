@@ -79,35 +79,34 @@ input:focus,textarea:focus,select:focus{border-color:var(--brand);box-shadow:0 0
     <div class="hero">
       <div class="brand"><span class="mark">SN</span>StudyNext Hub</div>
       <h1>学習アプリを<br>ひとつの入口へ。</h1>
-      <p class="lead">Google Sites から埋め込める児童用ポータルです。ログイン情報・学習ログ・先生からの連絡・デジタルプリントは、GitHub private DB とこのPCのStudyNext APIに保存します。</p>
+      <p class="lead">学習アプリ、先生からの連絡、デジタルプリントをひとつにまとめた学習ポータルです。学校でも家庭でも、必要な学習へすぐアクセスできます。</p>
       <div class="signal">
-        <div><b>GitHub DB</b><span>非公開リポジトリ保存</span></div>
-        <div><b>No Firebase</b><span>クレカ登録なし</span></div>
-        <div><b>Google Sites</b><span>URL埋め込み対応</span></div>
+        <div><b>アプリ</b><span>学習ツールをまとめて表示</span></div>
+        <div><b>連絡</b><span>先生からのお知らせを確認</span></div>
+        <div><b>プリント</b><span>課題を提出して記録</span></div>
       </div>
     </div>
     <div class="card">
       <div class="tabs">
         <button id="loginTab" class="active" type="button">ログイン</button>
-        <button id="registerTab" type="button">新規登録</button>
       </div>
       <div class="seg" style="margin-top:12px">
-        <button id="personalSeg" class="active" type="button">個人アカウント</button>
-        <button id="schoolSeg" type="button">学校アカウント</button>
+        <button id="schoolSeg" class="active" type="button">学校アカウント</button>
+        <button id="personalSeg" type="button">個人アカウント</button>
       </div>
-      <form id="personalForm">
-        <label id="displayNameWrap">表示名<input id="displayNameInput" autocomplete="name" placeholder="例：たろう"></label>
+      <form id="personalForm" style="display:none">
+        <label id="displayNameWrap" style="display:none">表示名<input id="displayNameInput" autocomplete="name" placeholder="例：たろう"></label>
         <label>メールアドレス<input id="emailInput" type="email" autocomplete="email" required placeholder="you@example.com"></label>
         <label>パスワード<input id="passwordInput" type="password" autocomplete="current-password" required minlength="8" placeholder="8文字以上"></label>
         <button id="personalSubmit" class="primary" type="submit">ログインする</button>
-        <p class="hint">個人アカウントはメール＋パスワードで使えます。GoogleログインはFirebase不要構成のため外しています。</p>
+        <p class="hint">個人アカウントを持っている場合はこちらからログインできます。新規作成は先生・管理者の案内に従ってください。</p>
       </form>
-      <form id="schoolForm" style="display:none">
+      <form id="schoolForm">
         <label>招待コード<input id="inviteInput" autocomplete="one-time-code" placeholder="SNX-XXXX" required></label>
         <label>本名<input id="realNameInput" autocomplete="name" placeholder="例：山田太郎" required></label>
         <label>生徒ID（2回目以降・任意）<input id="studentIdInput" placeholder="SN-123456"></label>
         <button class="primary" type="submit">学校アカウントで入る</button>
-        <p class="hint">先生が発行した招待コードを入れると、かぶらない生徒用IDを自動発行します。</p>
+        <p class="hint">先生から配られた招待コードと名前を入力してください。初回ログイン時に生徒IDを発行します。</p>
       </form>
       <p id="authStatus" class="hint"></p>
     </div>
@@ -142,7 +141,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--brand);box-shadow:0 0
           <div id="messagesList" class="list"></div>
         </div>
         <div id="settingsPanel" class="portal-card" style="display:none">
-          <div class="section-title"><h2>設定</h2><span id="apiStatus" class="badge">API確認中</span></div>
+          <div class="section-title"><h2>設定</h2><span id="apiStatus" class="badge">接続確認中</span></div>
           <form id="settingsForm">
             <div class="two">
               <label>表示名<input id="settingDisplayName"></label>
@@ -150,9 +149,9 @@ input:focus,textarea:focus,select:focus{border-color:var(--brand);box-shadow:0 0
             </div>
             <button class="primary" type="submit">設定を保存</button>
           </form>
-          <div class="two" style="margin-top:12px">
-            <button id="copyStudentUrlBtn" class="secondary" type="button">児童URLをコピー</button>
-            <button id="copyStudentIframeBtn" class="secondary" type="button">iframeをコピー</button>
+          <div class="two" style="margin-top:12px;display:none">
+            <button id="copyStudentUrlBtn" class="secondary" type="button">利用案内をコピー</button>
+            <button id="copyStudentIframeBtn" class="secondary" type="button">サポート情報をコピー</button>
           </div>
           <h3>最近の学習ログ</h3>
           <div id="recentLogs" class="list"></div>
@@ -175,7 +174,8 @@ input:focus,textarea:focus,select:focus{border-color:var(--brand);box-shadow:0 0
 <div id="toast" class="toast"></div>
 
 <script>
-const API_BASE='https://4e71997ee76fbe.lhr.life';
+const API_BASE='https://36ef7637143bf3.lhr.life';
+const API_CONFIG_URL='https://raw.githubusercontent.com/kougame55/studynext-gitonly-hub/main/api-config.json';
 const SITE_BASE_URL = 'https://kougame55.github.io/studynext-gitonly-hub/';
 const TOKEN_KEY = 'studynext_token_v3';
 const PROFILE_KEY = 'studynext_profile_v3';
@@ -188,30 +188,57 @@ const DEFAULT_APPS = [
   {id:'typing',title:'タイピング道場',icon:'⌨️',url:'apps/typing.html',description:'ローマ字入力のスピード練習。'}
 ];
 let mode = 'login';
-let accountType = 'personal';
+let accountType = 'school';
 let profile = null;
 let bootstrapData = {};
 let currentSession = null;
 const $ = id => document.getElementById(id);
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const token = () => localStorage.getItem(TOKEN_KEY) || '';
+let apiBasePromise = null;
 function toast(message){$('toast').textContent=message;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2400)}
 function saveSession(authToken,user){localStorage.setItem(TOKEN_KEY,authToken);localStorage.setItem(PROFILE_KEY,JSON.stringify(user));profile=user}
 function loadProfile(){try{return JSON.parse(localStorage.getItem(PROFILE_KEY)||'null')}catch{return null}}
-function apiError(error){return {invalid_credentials:'メールかパスワードが違います',already_exists:'すでに登録されています',invalid_input:'入力内容を確認してください',invalid_session:'ログインし直してください',forbidden:'権限がありません',reply_not_allowed:'返信は許可されていません',survey_not_found:'アンケートが見つかりません',print_not_found:'プリントが見つかりません'}[error?.message] || ('APIエラー: '+(error?.message||error))}
-async function api(path,options={}){
-  const headers = {'Content-Type':'application/json',...(token()?{Authorization:'Bearer '+token()}:{}),...(options.headers||{})};
-  const res = await fetch(API_BASE+path,{...options,headers});
+function apiError(error){return {invalid_credentials:'メールかパスワードが違います',already_exists:'すでに登録されています',invalid_input:'入力内容を確認してください',invalid_session:'ログインし直してください',forbidden:'権限がありません',reply_not_allowed:'返信は許可されていません',survey_not_found:'アンケートが見つかりません',print_not_found:'プリントが見つかりません'}[error?.message] || ('接続エラー: '+(error?.message||error))}
+function normalizeApiBase(value){return String(value||'').trim().replace(/\/+$/,'')}
+async function getApiBase(){
+  if(!apiBasePromise){
+    apiBasePromise=(async()=>{
+      try{
+        const res=await fetch(API_CONFIG_URL+'?v='+Date.now(),{cache:'no-store'});
+        if(res.ok){
+          const config=await res.json();
+          const next=normalizeApiBase(config.apiBase||config.apiUrl||config.API_BASE);
+          if(next) return next;
+        }
+      }catch{}
+      return normalizeApiBase(API_BASE);
+    })();
+  }
+  return apiBasePromise;
+}
+function resetApiBase(){apiBasePromise=null}
+async function api(path,options={},retry=true){
+  const authToken=token();
+  const base=await getApiBase();
+  const url=base+path+(authToken?(path.includes('?')?'&':'?')+'token='+encodeURIComponent(authToken):'');
+  let res;
+  try{
+    res = await fetch(url,{...options,headers:{'Content-Type':'text/plain;charset=UTF-8',...(options.headers||{})}});
+  }catch(error){
+    if(retry){resetApiBase();return api(path,options,false)}
+    throw error;
+  }
   const json = await res.json().catch(()=>({ok:false,error:'invalid_json'}));
   if(!res.ok || json.ok===false) throw new Error(json.error || 'api_error');
   return json;
 }
-function setMode(next){mode=next;$('loginTab').classList.toggle('active',mode==='login');$('registerTab').classList.toggle('active',mode==='register');$('displayNameWrap').style.display=mode==='register'?'grid':'none';$('personalSubmit').textContent=mode==='register'?'新規登録する':'ログインする'}
+function setMode(next){mode='login';$('loginTab').classList.add('active');$('displayNameWrap').style.display='none';$('personalSubmit').textContent='ログインする'}
 function setAccountType(next){accountType=next;$('personalSeg').classList.toggle('active',next==='personal');$('schoolSeg').classList.toggle('active',next==='school');$('personalForm').style.display=next==='personal'?'grid':'none';$('schoolForm').style.display=next==='school'?'grid':'none'}
 async function handlePersonalSubmit(event){
   event.preventDefault();$('authStatus').textContent='接続中...';
   try{
-    const body={action:mode,role:'student',email:$('emailInput').value.trim(),password:$('passwordInput').value,displayName:$('displayNameInput').value.trim()};
+    const body={action:'login',role:'student',email:$('emailInput').value.trim(),password:$('passwordInput').value,displayName:$('displayNameInput').value.trim()};
     const data=await api('/api/auth',{method:'POST',body:JSON.stringify(body)});
     saveSession(data.token,data.user);await openPortal();
   }catch(error){$('authStatus').textContent=apiError(error)}
@@ -237,7 +264,7 @@ async function refreshData(){
     $('apiStatus').textContent='接続OK';$('apiStatus').className='badge status-ok';
     renderApps();renderPrints();renderMessages();renderRecentLogs();applyUserSettings();
   }catch(error){
-    $('apiStatus').textContent='API未接続';$('apiStatus').className='badge status-bad';toast(apiError(error));
+    $('apiStatus').textContent='接続できません';$('apiStatus').className='badge status-bad';toast(apiError(error));
   }
 }
 function resolveAppUrl(url){try{return new URL(url || '',SITE_BASE_URL).href}catch{return url||''}}
@@ -317,7 +344,6 @@ async function saveSettings(event){
 }
 async function copyText(text){try{await navigator.clipboard.writeText(text);toast('コピーしました')}catch{prompt('コピーしてください',text)}}
 $('loginTab').onclick=()=>setMode('login');
-$('registerTab').onclick=()=>setMode('register');
 $('personalSeg').onclick=()=>setAccountType('personal');
 $('schoolSeg').onclick=()=>setAccountType('school');
 $('personalForm').onsubmit=handlePersonalSubmit;
@@ -326,12 +352,12 @@ $('logoutBtn').onclick=()=>{localStorage.removeItem(TOKEN_KEY);localStorage.remo
 $('refreshBtn').onclick=()=>refreshData();
 $('appsTab').onclick=()=>showTab('apps');$('printsTab').onclick=()=>showTab('prints');$('messagesTab').onclick=()=>showTab('messages');$('settingsTab').onclick=()=>showTab('settings');
 $('settingsForm').onsubmit=saveSettings;
-$('copyStudentUrlBtn').onclick=()=>copyText(SITE_BASE_URL);
-$('copyStudentIframeBtn').onclick=()=>copyText(`<iframe src="${SITE_BASE_URL}" style="width:100%;height:760px;border:0;border-radius:12px" loading="lazy" allow="fullscreen; clipboard-write"></iframe>`);
+$('copyStudentUrlBtn').onclick=()=>copyText('先生から案内されたページでログインしてください。');
+$('copyStudentIframeBtn').onclick=()=>copyText('サポートへお問い合わせください。');
 $('closeRunner').onclick=()=>closeApp();
 $('reloadRunner').onclick=()=>currentSession&&openApp({id:currentSession.appId,title:currentSession.appTitle,url:currentSession.url});
 window.addEventListener('message',event=>{if(event.data?.type==='studynext:back')closeApp();if(event.data?.type==='studynext:usage'&&currentSession){currentSession.logged=true;writeUsage(currentSession,event.data.payload||{})}});
-setMode('login');setAccountType('personal');
+setMode('login');setAccountType('school');
 if(token()){profile=loadProfile();openPortal().catch(()=>{localStorage.removeItem(TOKEN_KEY);localStorage.removeItem(PROFILE_KEY);location.reload()})}
 </script>
 </body>
