@@ -20,8 +20,8 @@ body.theme-night{--bg:#07111f;--panel:#0d1b2f;--panel2:#102844;--line:#224466;--
     <div class="hero">
       <div class="brand"><span class="mark">SN</span>StudyNext Teacher</div>
       <h1>クラスと学習を<br>まとめて見る。</h1>
-      <p class="lead">招待コード、児童連絡、アンケート、デジタルプリント、アプリ追加、学習ログをひとつに集約します。保存先はGitHub private DB、入口はGoogle Sitesで使えます。</p>
-      <p class="hint">Firebaseなし / クレカなし / このPCのStudyNext APIで外部ログイン</p>
+      <p class="lead">クラス管理、児童連絡、アンケート、デジタルプリント、アプリ追加、学習記録の確認をひとつにまとめた先生用ポータルです。</p>
+      <p class="hint">先生アカウントを作成したあと、クラスを作成すると児童用の招待コードを発行できます。</p>
     </div>
     <div class="card">
       <div class="tabs"><button id="loginTab" class="active" type="button">ログイン</button><button id="registerTab" type="button">新規登録</button></div>
@@ -30,6 +30,7 @@ body.theme-night{--bg:#07111f;--panel:#0d1b2f;--panel2:#102844;--line:#224466;--
         <label>メールアドレス<input id="emailInput" type="email" required autocomplete="email"></label>
         <label>パスワード<input id="passwordInput" type="password" required minlength="8" autocomplete="current-password"></label>
         <button id="authSubmit" class="primary" type="submit">ログインする</button>
+        <p id="teacherRegisterHint" class="hint">新規登録では招待コードは不要です。児童用の招待コードは登録後にクラス画面で作成します。</p>
         <p id="authStatus" class="hint"></p>
       </form>
     </div>
@@ -50,7 +51,7 @@ body.theme-night{--bg:#07111f;--panel:#0d1b2f;--panel2:#102844;--line:#224466;--
       </aside>
       <section>
         <div id="dashboardPanel" class="panel">
-          <div class="section-title"><h2>クラス状況</h2><span id="apiStatus" class="badge">API確認中</span></div>
+          <div class="section-title"><h2>クラス状況</h2><span id="apiStatus" class="badge">接続確認中</span></div>
           <div class="three">
             <div class="stat"><span>児童数</span><b id="studentCount">0</b></div>
             <div class="stat"><span>総学習時間</span><b id="totalMinutes">0分</b></div>
@@ -113,14 +114,14 @@ body.theme-night{--bg:#07111f;--panel:#0d1b2f;--panel2:#102844;--line:#224466;--
         </div>
 
         <div id="settingsPanel" class="panel" style="display:none">
-          <div class="section-title"><h2>設定・貼り付け</h2><span class="badge">Google Sites用</span></div>
+          <div class="section-title"><h2>設定</h2><span class="badge">先生用</span></div>
           <div class="two">
-            <button id="copyStudentUrlBtn" class="secondary" type="button">児童URLをコピー</button>
-            <button id="copyTeacherUrlBtn" class="secondary" type="button">先生URLをコピー</button>
+            <button id="copyStudentUrlBtn" class="secondary" type="button">児童ページ案内をコピー</button>
+            <button id="copyTeacherUrlBtn" class="secondary" type="button">先生ページ案内をコピー</button>
           </div>
           <div class="two" style="margin-top:12px">
-            <button id="copyStudentIframeBtn" class="secondary" type="button">児童iframeをコピー</button>
-            <button id="copyTeacherIframeBtn" class="secondary" type="button">先生iframeをコピー</button>
+            <button id="copyStudentIframeBtn" class="secondary" type="button">サポート情報をコピー</button>
+            <button id="copyTeacherIframeBtn" class="secondary" type="button">接続情報をコピー</button>
           </div>
           <form id="themeForm"><label>テーマ<select id="themeSelect"><option value="light">ライト</option><option value="night">ナイト</option></select></label><button class="primary" type="submit">保存</button></form>
         </div>
@@ -130,7 +131,8 @@ body.theme-night{--bg:#07111f;--panel:#0d1b2f;--panel2:#102844;--line:#224466;--
 </main>
 <div id="toast" style="position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#111827;color:white;border-radius:999px;padding:12px 18px;box-shadow:0 14px 40px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:.2s;z-index:80"></div>
 <script>
-const API_BASE='https://4e71997ee76fbe.lhr.life';
+const API_BASE='https://36ef7637143bf3.lhr.life';
+const API_CONFIG_URL='https://raw.githubusercontent.com/kougame55/studynext-gitonly-hub/main/api-config.json';
 const STUDENT_URL='https://kougame55.github.io/studynext-gitonly-hub/';
 const TEACHER_URL='https://kougame55.github.io/studynext-gitonly-hub/teacher.html';
 const TOKEN_KEY='studynext_teacher_token_v3';
@@ -138,15 +140,19 @@ const PROFILE_KEY='studynext_teacher_profile_v3';
 let mode='login',profile=null,data={};
 const $=id=>document.getElementById(id);
 const token=()=>localStorage.getItem(TOKEN_KEY)||'';
+let apiBasePromise=null;
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function toast(message){$('toast').textContent=message;$('toast').style.opacity='1';$('toast').style.bottom='32px';setTimeout(()=>{$('toast').style.opacity='0';$('toast').style.bottom='22px'},2400)}
-function apiError(error){return {invalid_credentials:'メールかパスワードが違います',already_exists:'すでに登録されています',invalid_input:'入力内容を確認してください',invalid_class:'クラスを選んでください',invalid_session:'ログインし直してください'}[error?.message]||('APIエラー: '+(error?.message||error))}
-async function api(path,options={}){const res=await fetch(API_BASE+path,{...options,headers:{'Content-Type':'application/json',...(token()?{Authorization:'Bearer '+token()}:{}),...(options.headers||{})}});const json=await res.json().catch(()=>({ok:false,error:'invalid_json'}));if(!res.ok||json.ok===false)throw new Error(json.error||'api_error');return json}
+function apiError(error){return {invalid_credentials:'メールかパスワードが違います',already_exists:'すでに登録されています',invalid_input:'入力内容を確認してください',invalid_class:'クラスを選んでください',invalid_session:'ログインし直してください'}[error?.message]||('接続エラー: '+(error?.message||error))}
+function normalizeApiBase(value){return String(value||'').trim().replace(/\/+$/,'')}
+async function getApiBase(){if(!apiBasePromise){apiBasePromise=(async()=>{try{const res=await fetch(API_CONFIG_URL+'?v='+Date.now(),{cache:'no-store'});if(res.ok){const config=await res.json();const next=normalizeApiBase(config.apiBase||config.apiUrl||config.API_BASE);if(next)return next}}catch{}return normalizeApiBase(API_BASE)})()}return apiBasePromise}
+function resetApiBase(){apiBasePromise=null}
+async function api(path,options={},retry=true){const authToken=token();const base=await getApiBase();const url=base+path+(authToken?(path.includes('?')?'&':'?')+'token='+encodeURIComponent(authToken):'');let res;try{res=await fetch(url,{...options,headers:{'Content-Type':'text/plain;charset=UTF-8',...(options.headers||{})}})}catch(error){if(retry){resetApiBase();return api(path,options,false)}throw error}const json=await res.json().catch(()=>({ok:false,error:'invalid_json'}));if(!res.ok||json.ok===false)throw new Error(json.error||'api_error');return json}
 function setMode(next){mode=next;$('loginTab').classList.toggle('active',next==='login');$('registerTab').classList.toggle('active',next==='register');$('teacherNameWrap').style.display=next==='register'?'grid':'none';$('authSubmit').textContent=next==='register'?'新規登録する':'ログインする'}
 async function handleAuth(event){event.preventDefault();$('authStatus').textContent='接続中...';try{const res=await api('/api/auth',{method:'POST',body:JSON.stringify({action:mode,role:'teacher',email:$('emailInput').value.trim(),password:$('passwordInput').value,displayName:$('teacherNameInput').value.trim()})});localStorage.setItem(TOKEN_KEY,res.token);localStorage.setItem(PROFILE_KEY,JSON.stringify(res.user));profile=res.user;await openPortal()}catch(error){$('authStatus').textContent=apiError(error)}}
 function loadProfile(){try{return JSON.parse(localStorage.getItem(PROFILE_KEY)||'null')}catch{return null}}
-async function openPortal(){profile=profile||loadProfile();$('authView').style.display='none';$('portalView').style.display='block';$('meSub').textContent=(profile.displayName||profile.email||'先生')+' / GitHub private DB API';await refreshData()}
-async function refreshData(){try{data=await api('/api/bootstrap');profile=data.profile||profile;localStorage.setItem(PROFILE_KEY,JSON.stringify(profile));$('apiStatus').textContent='接続OK';$('apiStatus').className='badge status-ok';renderAll()}catch(error){$('apiStatus').textContent='API未接続';$('apiStatus').className='badge status-bad';toast(apiError(error))}}
+async function openPortal(){profile=profile||loadProfile();$('authView').style.display='none';$('portalView').style.display='block';$('meSub').textContent=(profile.displayName||profile.email||'先生')+' / 先生用ポータル';await refreshData()}
+async function refreshData(){try{data=await api('/api/bootstrap');profile=data.profile||profile;localStorage.setItem(PROFILE_KEY,JSON.stringify(profile));$('apiStatus').textContent='接続OK';$('apiStatus').className='badge status-ok';renderAll()}catch(error){$('apiStatus').textContent='接続できません';$('apiStatus').className='badge status-bad';toast(apiError(error))}}
 function classes(){return data.classes||[]}function selectedClassId(selectId){return $(selectId).value || classes()[0]?.id || ''}
 function fillClassSelects(){['messageClass','printClass','appClass'].forEach(id=>{$(id).innerHTML=classes().map(c=>`<option value="${escapeHtml(c.id)}">${escapeHtml(c.className)} / ${escapeHtml(c.inviteCode)}</option>`).join('')})}
 function renderAll(){fillClassSelects();renderStats();renderClasses();renderStudents();renderLogs();renderReplies();renderSubmissions();renderApps();applyTheme()}
@@ -165,7 +171,7 @@ async function createApp(event){event.preventDefault();try{await api('/api/apps'
 function showTab(name){['dashboard','messages','prints','apps','settings'].forEach(key=>{const panel=$(key+'Panel');if(panel)panel.style.display=key===name?'block':'none';$(key+'Tab').classList.toggle('active',key===name)})}
 function applyTheme(){const theme=localStorage.getItem('studynext_teacher_theme')||'light';document.body.classList.toggle('theme-night',theme==='night');$('themeSelect').value=theme}
 async function copyText(text){try{await navigator.clipboard.writeText(text);toast('コピーしました')}catch{prompt('コピーしてください',text)}}
-$('loginTab').onclick=()=>setMode('login');$('registerTab').onclick=()=>setMode('register');$('authForm').onsubmit=handleAuth;$('classForm').onsubmit=createClass;$('messageForm').onsubmit=createMessage;$('printForm').onsubmit=createPrint;$('appForm').onsubmit=createApp;$('refreshBtn').onclick=()=>refreshData();$('logoutBtn').onclick=()=>{localStorage.removeItem(TOKEN_KEY);localStorage.removeItem(PROFILE_KEY);location.reload()};['dashboard','messages','prints','apps','settings'].forEach(k=>$(k+'Tab').onclick=()=>showTab(k));$('copyStudentUrlBtn').onclick=()=>copyText(STUDENT_URL);$('copyTeacherUrlBtn').onclick=()=>copyText(TEACHER_URL);$('copyStudentIframeBtn').onclick=()=>copyText(`<iframe src="${STUDENT_URL}" style="width:100%;height:760px;border:0;border-radius:12px" loading="lazy" allow="fullscreen; clipboard-write"></iframe>`);$('copyTeacherIframeBtn').onclick=()=>copyText(`<iframe src="${TEACHER_URL}" style="width:100%;height:760px;border:0;border-radius:12px" loading="lazy" allow="fullscreen; clipboard-write"></iframe>`);$('themeForm').onsubmit=e=>{e.preventDefault();localStorage.setItem('studynext_teacher_theme',$('themeSelect').value);applyTheme();toast('保存しました')};
+$('loginTab').onclick=()=>setMode('login');$('registerTab').onclick=()=>setMode('register');$('authForm').onsubmit=handleAuth;$('classForm').onsubmit=createClass;$('messageForm').onsubmit=createMessage;$('printForm').onsubmit=createPrint;$('appForm').onsubmit=createApp;$('refreshBtn').onclick=()=>refreshData();$('logoutBtn').onclick=()=>{localStorage.removeItem(TOKEN_KEY);localStorage.removeItem(PROFILE_KEY);location.reload()};['dashboard','messages','prints','apps','settings'].forEach(k=>$(k+'Tab').onclick=()=>showTab(k));$('copyStudentUrlBtn').onclick=()=>copyText('児童用ページを開き、先生から配られた招待コードと本名でログインしてください。');$('copyTeacherUrlBtn').onclick=()=>copyText('先生用ページからログインしてください。新規登録後、クラス作成で児童用招待コードを発行できます。');$('copyStudentIframeBtn').onclick=()=>copyText('サポートへお問い合わせください。');$('copyTeacherIframeBtn').onclick=()=>copyText('接続状態は正常です。');$('themeForm').onsubmit=e=>{e.preventDefault();localStorage.setItem('studynext_teacher_theme',$('themeSelect').value);applyTheme();toast('保存しました')};
 setMode('login');applyTheme();if(token()){profile=loadProfile();openPortal().catch(()=>{localStorage.removeItem(TOKEN_KEY);localStorage.removeItem(PROFILE_KEY);location.reload()})}
 </script>
 </body>
